@@ -4,6 +4,9 @@ module.exports = {
   plugins: [],
   globals: {
     _: false,
+    Article: false,
+    CaptureService: false,
+    CrawlerLog: false,
     config: false,
     Constants: false,
     Errors: false,

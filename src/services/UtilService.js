@@ -1,5 +1,8 @@
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
+const iconv = require('iconv-lite');
+
+const { timeConversion, nuChange } = require('./Constants');
 
 const svc = {
   isMongoError(err) {
@@ -180,6 +183,143 @@ const svc = {
       .catch((e) => {
         return ctx.wrapError(e, error);
       });
+  },
+  calculateTime(timeStr) {
+    /* eslint-disable no-mixed-operators */
+    let timeNu = 0;
+    // eslint-disable-next-line no-param-reassign
+    timeStr = timeStr.trim();
+    if (/今日更新/.test(timeStr)) {
+      return new Date().getTime();
+    }
+    else if (/^\d+月\d+$/.test(timeStr)) {
+      return svc.calculateTimeWithNoYear(timeStr.replace('月', '/'));
+    }
+    if (/(\d+[-/]\d+[-/]\d+)/.test(timeStr)) {
+      return new Date(RegExp.$1.replace(/-/g, '/')).getTime();
+    }
+    else if (/(\d+[-/]\d+)/.test(timeStr)) {
+      return svc.calculateTimeWithNoYear(RegExp.$1);
+    }
+
+    if (/秒前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.second);
+    }
+    else if (/分钟前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.minute);
+    }
+    else if (/小时前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.hour);
+    }
+    else if (/天前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.day);
+    }
+    else if (/周前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.week);
+    }
+    else if (/月前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.month);
+    }
+    else if (/年前/.test(timeStr)) {
+      timeNu = new Date(new Date() - parseInt(timeStr, 10) * timeConversion.year);
+    }
+    else {
+      timeNu = timeStr;
+    }
+    return new Date(timeNu).getTime();
+  },
+  calculateTimeWithNoYear(timeStr) {
+    let today = new Date();
+    let calculateTime = new Date(`${today.getFullYear()}/${timeStr}`);
+    if (calculateTime && calculateTime > today) {
+      calculateTime.setFullYear(today.getFullYear() - 1);
+    }
+    return calculateTime.getTime();
+  },
+  calculateTimeWithChinese(timeStr) {
+    // 27 九, 2015
+    // ["On", "九", "25", "2015"]
+    let timeArr = timeStr.split(/,?\s+/);
+    if (timeArr[0] === 'On') {
+      return new Date(`${timeArr[3]}/${nuChange[timeArr[1]]}/${timeArr[2]}`).getTime();
+    }
+    return new Date(`${timeArr[2]}/${nuChange[timeArr[1].replace(/\s*月\s*/, '')]}/${timeArr[0]}`).getTime();
+  },
+  calculateTimeLen(millisecond) {
+    /* eslint-disable no-param-reassign */
+    let arr = [];
+    let yearNu = parseInt(millisecond / timeConversion.year, 10);
+    if (yearNu >= 1) {
+      arr.push(`${yearNu} 年`);
+      millisecond -= yearNu * timeConversion.year;
+    }
+    let monthNu = parseInt(millisecond / timeConversion.month, 10);
+    if (monthNu >= 1) {
+      arr.push(`${monthNu} 月`);
+      millisecond -= monthNu * timeConversion.month;
+    }
+    let dayNu = parseInt(millisecond / timeConversion.day, 10);
+    if (dayNu >= 1) {
+      arr.push(`${dayNu} 天`);
+      millisecond -= dayNu * timeConversion.day;
+    }
+    let hourNu = parseInt(millisecond / timeConversion.hour, 10);
+    if (hourNu >= 1) {
+      arr.push(`${hourNu} 小时`);
+      millisecond -= hourNu * timeConversion.hour;
+    }
+    let minuteNu = parseInt(millisecond / timeConversion.minute, 10);
+    if (minuteNu >= 1) {
+      arr.push(`${minuteNu} 分`);
+      millisecond -= minuteNu * timeConversion.minute;
+    }
+    let secondNu = parseInt(millisecond / timeConversion.second, 10);
+    if (secondNu >= 1) {
+      arr.push(`${secondNu} 秒`);
+      millisecond -= secondNu * timeConversion.second;
+    }
+    arr.push(`${millisecond} 毫秒`);
+    return arr.join('/');
+  },
+  changeEncoding(data, encoding, noCheck) {
+    let val = iconv.decode(data, encoding || 'utf8');
+    if (!noCheck && val.indexOf('�') !== -1) {
+      val = iconv.decode(data, 'gbk');
+    }
+    return val;
+  },
+  getFewDaysAgo(n, startDay) {
+    startDay = svc.getZeroDay(startDay);
+
+    if (!n) {
+      return startDay;
+    }
+
+    let fewDaysAgo = new Date(startDay);
+    fewDaysAgo.setDate(startDay.getDate() - n);
+    return fewDaysAgo;
+  },
+  getZeroDay(date) {
+    date = date ? (new Date(date)) : (new Date());
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
+  parseJson(str) {
+    if (!_.isString(str)) {
+      return str;
+    }
+    try {
+      return JSON.parse(str);
+    }
+    catch (e) {
+      return null;
+    }
+  },
+  compareTime(date1, date2, len) {
+    return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) < len;
   },
 };
 
