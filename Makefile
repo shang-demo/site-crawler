@@ -3,6 +3,8 @@ d=template2
 templateVersion=v2
 gulp:
 	@ gulp
+push:
+	git push coding master
 node-dev:
 	node-dev --respawn src/index.js
 merge:
