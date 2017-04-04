@@ -19,6 +19,8 @@ import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 
 import '../styles/styles.scss';
+import { SiteListComponent } from './site-list/site-list.component';
+import { SiteService } from './site/site.service';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -40,6 +42,7 @@ type StoreType = {
   declarations: [
     AppComponent,
     HomeComponent,
+    SiteListComponent,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
@@ -50,7 +53,8 @@ type StoreType = {
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    SiteService,
   ]
 })
 export class AppModule {

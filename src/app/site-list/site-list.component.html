@@ -1,0 +1,20 @@
+
+
+<div class="sites">
+  <div class="site" *ngFor="let site of sites">
+    <img class="left" src="{{site.img}}">
+    <div class="right">
+      <div class="header">
+        <div class="title">
+          {{site.title}}
+        </div>
+        <div class="date">
+          {{site.updatedAt | date : 'yyyy/MM/dd hh:mm:ss'}}
+        </div>
+      </div>
+      <div class="intro">
+        {{site.intro}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,10 @@
 /* This file is for setting global styles  */
 @import 'variables';
 
+body {
+  margin: 0;
+}
+
 nav {
   margin-top: 16px;
 }
