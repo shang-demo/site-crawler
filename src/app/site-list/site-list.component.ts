@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Site } from '../model/site-model';
 import { SiteService } from '../site/site.service';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   // The selector is what angular internally uses
@@ -17,10 +18,18 @@ import { SiteService } from '../site/site.service';
 
 export class SiteListComponent implements OnInit, OnDestroy {
 
-  public sites: Site[];
+  public sites: Site[] = [];
+  public imgServerUrl = '//site-crawler.leanapp.cn/api/v1/proxy/pipe?url=';
   private searchItemsSubscription;
 
-  constructor(private siteService: SiteService) {
+  constructor(private siteService: SiteService,
+              private snackBar: MdSnackBar) {
+  }
+
+  public openSnackBar() {
+    this.snackBar.open('没有更多了~', 'ok', {
+      duration: 5000,
+    });
   }
 
   public ngOnDestroy(): void {
@@ -30,7 +39,22 @@ export class SiteListComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.searchItemsSubscription = this.siteService.searchItems
       .subscribe((sites) => {
-        this.sites = sites;
+        if (!sites) {
+          this.sites = [];
+          return null;
+        }
+
+        if (!sites.length) {
+          this.openSnackBar();
+        }
+
+        this.sites.push(...sites);
       });
+
+    this.siteService.scrollDown();
+  }
+
+  public onScrollDown() {
+    this.siteService.scrollDown();
   }
 }

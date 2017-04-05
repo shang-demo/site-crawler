@@ -20,11 +20,36 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 20px;
+
+        .title {
+          font-size: 20px;
+          font-weight: bolder;
+
+          a {
+            color: #2196f3;
+            text-decoration: none;
+          }
+
+          a:hover {
+            color: #0a6ebd;
+            text-decoration: underline;
+          }
+        }
+
+        .date {
+          word-wrap: break-word;
+          word-break: break-all;
+        }
       }
 
       .intro {
         display: flex;
       }
     }
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #eee;
   }
 }

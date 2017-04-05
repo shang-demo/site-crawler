@@ -6,6 +6,7 @@ import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularcla
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { MaterialModule } from '@angular/material';
 import 'hammerjs';
+import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -46,6 +47,7 @@ type StoreType = {
   ],
   imports: [ // import Angular's modules
     BrowserModule,
+    InfiniteScrollModule,
     FormsModule,
     HttpModule,
     MaterialModule.forRoot(),

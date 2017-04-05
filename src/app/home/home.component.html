@@ -1,17 +1,31 @@
-<md-toolbar class="header">
-  <div class="block"></div>
-  <button md-raised-button [routerLink]=" ['./'] "
-          routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-    Index
-  </button>
-  <!--<button md-raised-button [routerLink]=" ['./site-list'] "-->
-          <!--routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">-->
-    <!--setting-->
-  <!--</button>-->
+<div class="header">
+  <md-toolbar>
+    <div class="toolbar">
+      <div class="left">
+        <button (click)="reload()" md-raised-button [routerLink]=" ['./'] "
+                routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          SiteCrawler
+        </button>
+        <!--<button md-raised-button [routerLink]=" ['./site-list'] "-->
+        <!--routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">-->
+        <!--setting-->
+        <!--</button>-->
 
-  <md-input-container class="search">
-    <input mdInput placeholder="搜索内容" #searchBox (keyup)="search(searchBox.value)">
-  </md-input-container>
-</md-toolbar>
-
+        <md-input-container class="search">
+          <input mdInput placeholder="搜索内容" #searchBox (keyup)="search(searchBox.value)">
+        </md-input-container>
+      </div>
+      <div class="right">
+        <button md-button (click)="forceUpdate()">
+          <label *ngIf="updateTime">
+            更新时间: {{updateTime | date : 'yy/MM/dd hh:mm:ss'}}
+          </label>
+          <label *ngIf="!updateTime">
+            更新时间: 未知
+          </label>
+        </button>
+      </div>
+    </div>
+  </md-toolbar>
+</div>
 <site-list></site-list>

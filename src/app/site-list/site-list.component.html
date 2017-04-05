@@ -1,20 +1,29 @@
 
 
-<div class="sites">
-  <div class="site" *ngFor="let site of sites">
-    <img class="left" src="{{site.img}}">
-    <div class="right">
-      <div class="header">
-        <div class="title">
-          {{site.title}}
+<div class="sites"
+     infinite-scroll
+     (scrolled)="onScrollDown()"
+>
+  <div *ngFor="let site of sites">
+    <div class="site">
+      <img class="left" src="{{imgServerUrl + site.img}}">
+      <div class="right">
+        <div class="header">
+          <div class="title">
+            <a target="_blank" href="{{site.href}}">{{site.title}}</a>
+          </div>
+          <div class="date">
+            {{site.updatedAt | date : 'yy/MM/dd hh:mm:ss'}}
+          </div>
         </div>
-        <div class="date">
-          {{site.updatedAt | date : 'yyyy/MM/dd hh:mm:ss'}}
+        <div class="intro">
+          {{site.intro}}
         </div>
-      </div>
-      <div class="intro">
-        {{site.intro}}
       </div>
     </div>
+    <div>
+      <hr>
+    </div>
+
   </div>
 </div>
