@@ -18,7 +18,7 @@ function lift() {
 function getSiteConfig() {
   let sitesConfig = parseArgs(process.argv.slice(2));
 
-  _.forEachRight(sites, function (item, i) {
+  _.forEachRight(sites, (item, i) => {
     let siteConfig = sitesConfig[item.site];
     if (!siteConfig || siteConfig.disabled) {
       sites.splice(i, 1);
@@ -35,7 +35,7 @@ function getSiteConfig() {
 
 function parseArgs(args) {
   let defaultConfig = {};
-  _.forEach(sites, function (item) {
+  _.forEach(sites, (item) => {
     defaultConfig[item.site] = {};
   });
 
@@ -44,6 +44,7 @@ function parseArgs(args) {
     config = JSON.parse(args[0]);
   }
   catch (e) {
+    logger.warn(e);
   }
 
   if (_.isObject(config)) {
@@ -54,19 +55,19 @@ function parseArgs(args) {
 
 // 采集所有页面
 function captureAll() {
-  sites.forEach(function (item) {
+  sites.forEach((item) => {
     if (item.pageFun) {
       item.requestConfig.url = item.pageFun(item.curPage);
     }
     else {
       item.requestConfig.url = item.requestConfig.url.replace(/(page\/\d+)+/, '');
-      item.requestConfig.url = item.requestConfig.url + 'page/' + item.curPage;
+      item.requestConfig.url = `${item.requestConfig.url}page/${item.curPage}`;
     }
     item.url = item.requestConfig.url;
   });
 
   return Promise
-    .all(sites.map(function (item) {
+    .all(sites.map((item) => {
       return ArticleController.crawler(item)
         .catch((e) => {
           logger.warn(e);
@@ -78,12 +79,14 @@ function captureAll() {
     .then((data) => {
       _.forEachRight(data, (siteResult, i) => {
         if (!siteResult.record.total || siteResult.record.updateFailed) {
+          // eslint-disable-next-line no-plusplus
           sites[i].canErrNu--;
           logger.warn('siteResult: ', siteResult);
         }
         else {
           logger.info('site success: ', siteResult.site, sites[i].curPage);
           sites[i].canErrNu = 3;
+          // eslint-disable-next-line no-plusplus
           sites[i].curPage++;
         }
 

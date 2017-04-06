@@ -137,11 +137,10 @@ module.exports.allSites = [{
   },
   pageFun(i) {
     if (i === 1) {
-      return `http://www.iqshw.com/`;
+      return 'http://www.iqshw.com/';
     }
-    else {
-      return `https://www.baidu.com`;
-    }
+
+    return 'https://www.baidu.com';
   },
   parseConfig: {
     mode: 'css',
