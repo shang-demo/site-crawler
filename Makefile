@@ -5,6 +5,7 @@ gulp:
 	@ gulp
 push:
 	git push coding master
+	git push origin master:backend
 node-dev:
 	node-dev --respawn src/index.js
 merge:
