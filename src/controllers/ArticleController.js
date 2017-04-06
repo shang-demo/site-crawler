@@ -24,24 +24,46 @@ const ctrl = {
         },
       };
     }
+    else {
+      conditions.site = {
+        $ne: 'iqq',
+      };
+    }
+
+    if (ctx.query.search) {
+      conditions.$or = [{
+        title: {
+          $regex: _.escapeRegExp(ctx.query.search),
+          $options: 'gi',
+        }
+      }, {
+        intro: {
+          $regex: _.escapeRegExp(ctx.query.search),
+          $options: 'gi',
+        }
+      }];
+    }
 
     logger.info('ctx.query.sites: ', ctx.query.sites);
     logger.info('conditions: ', conditions);
 
-    await UtilService.conditionsQuerySend(Article, ctx, new Errors.UnknownError(), {
-      conditions,
-      options: {
-        sort: {
-          time: -1,
-          updatedAt: -1,
-        }
-      }
-    });
+    await Promise.delay(0)
+      .then(() => {
+        return UtilService.conditionsQuerySend(Article, ctx, new Errors.UnknownError(), {
+          conditions,
+          options: {
+            sort: {
+              time: -1,
+              updatedAt: -1,
+            }
+          }
+        });
+      });
   },
   async crawler(siteInfo) {
     logger.info('start update site： ', siteInfo.site);
 
-    await Promise
+    return Promise
       .try(() => {
         return gather(_.assign({
           timeout: 15 * 1000

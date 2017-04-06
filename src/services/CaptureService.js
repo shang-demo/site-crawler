@@ -135,6 +135,14 @@ module.exports.allSites = [{
   requestConfig: {
     url: 'http://www.iqshw.com/'
   },
+  pageFun(i) {
+    if (i === 1) {
+      return `http://www.iqshw.com/`;
+    }
+    else {
+      return `https://www.baidu.com`;
+    }
+  },
   parseConfig: {
     mode: 'css',
     extract_rules: [{
