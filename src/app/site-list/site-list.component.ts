@@ -19,7 +19,7 @@ import { MdSnackBar } from '@angular/material';
 export class SiteListComponent implements OnInit, OnDestroy {
 
   public sites: Site[] = [];
-  public imgServerUrl = '//site-crawler.leanapp.cn/api/v1/proxy/pipe?url=';
+  public imgServerUrl = this.siteService.serverUrl + '/api/v1/proxy/pipe?url=';
   private searchItemsSubscription;
 
   constructor(private siteService: SiteService,

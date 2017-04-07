@@ -9,6 +9,8 @@ export class SiteService {
   public get searchItems(): Observable<Site []> {
     return this.siteSubject.asObservable();
   }
+  public serverUrl = '//site-crawler.leanapp.cn';
+  // public serverUrl = 'http://localhost:1337';
 
   private meta = {
     page: 1,
@@ -18,7 +20,6 @@ export class SiteService {
 
   private siteSubject = new Subject<Site []>();
   private searchSubject = new Subject<string>();
-  private serverUrl = 'http://site-crawler.leanapp.cn';
 
   constructor(private http: Http) {
     this.searchSubject
