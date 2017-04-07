@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable, Subject } from 'rxjs';
 import { Site } from '../model/site-model';
+import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 
 @Injectable()
 export class SiteService {
@@ -21,14 +22,17 @@ export class SiteService {
   private siteSubject = new Subject<Site []>();
   private searchSubject = new Subject<string>();
 
-  constructor(private http: Http) {
+  constructor(private http: Http,
+              private slimLoader: SlimLoadingBarService) {
     this.searchSubject
       .debounceTime(300)
       .distinctUntilChanged()
       .switchMap(() => {
+        this.slimLoader.start();
         return this.querySite(this.meta);
       })
       .subscribe((sites: Site []) => {
+        this.slimLoader.complete();
         if (this.meta.page === 1) {
           this.siteSubject.next(null);
         }

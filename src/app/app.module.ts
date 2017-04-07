@@ -5,6 +5,7 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { MaterialModule } from '@angular/material';
+import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import 'hammerjs';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
@@ -26,7 +27,7 @@ import { SiteService } from './site/site.service';
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState
+  AppState,
 ];
 
 type StoreType = {
@@ -51,13 +52,14 @@ type StoreType = {
     FormsModule,
     HttpModule,
     MaterialModule.forRoot(),
+    SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
     APP_PROVIDERS,
     SiteService,
-  ]
+  ],
 })
 export class AppModule {
 

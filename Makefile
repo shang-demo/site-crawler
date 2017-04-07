@@ -1,4 +1,4 @@
-.PHONY: push start
+.PHONY: push start pushProd copy
 start:
 	npm run start:hmr
 push:
@@ -11,3 +11,5 @@ pushProd:
 	git add -A; \
 	git commit -m "auto"; \
 	git push coding master:coding-pages -f
+copy:
+	@ sh config/copy.sh $(d)
