@@ -166,5 +166,17 @@
   "engines": {
     "node": ">= 4.2.1",
     "npm": ">= 3"
+  },
+  "push": {
+    "dev": {
+      "url": "git@github.com:shang-demo/site-crawler.git",
+      "remote": "origin",
+      "branch": "master"
+    },
+    "deploy": {
+      "url": "git@gitlab.com:demoshang/site-crawler.git",
+      "remote": "prod",
+      "branch": "__package_name__"
+    }
   }
 }

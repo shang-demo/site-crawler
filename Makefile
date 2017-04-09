@@ -1,15 +1,12 @@
-.PHONY: push start pushProd copy
+.PHONY: push start deploy copy
 start:
 	npm run start:hmr
+merge:
+	git fetch template v2
+	git merge remotes/template/v2
 push:
-	git push origin master:frontend
-pushProd:
-	npm run build:aot:prod; \
-	cd dist; \
-	git init; \
-	git remote add coding git@git.coding.net:xinshangshangxin/site-crawler.git; \
-	git add -A; \
-	git commit -m "auto"; \
-	git push coding master:coding-pages -f
+	@ sh config/push.sh
+deploy:
+	@ sh config/push.sh deploy
 copy:
 	@ sh config/copy.sh $(d)
