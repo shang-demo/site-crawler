@@ -171,7 +171,7 @@
     "dev": {
       "url": "git@github.com:shang-demo/site-crawler.git",
       "remote": "origin",
-      "branch": "master"
+      "branch": "frontend"
     },
     "deploy": {
       "url": "git@gitlab.com:demoshang/site-crawler.git",
