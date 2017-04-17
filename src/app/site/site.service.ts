@@ -10,8 +10,11 @@ export class SiteService {
   public get searchItems(): Observable<Site []> {
     return this.siteSubject.asObservable();
   }
+
   public serverUrl = '//site-crawler.leanapp.cn';
   // public serverUrl = 'http://localhost:1337';
+
+  public sites = ['zd', 'xclient', 'llm'];
 
   private meta = {
     page: 1,
@@ -75,6 +78,14 @@ export class SiteService {
   public forceUpdate() {
     return this.http
       .get(this.serverUrl + '/api/v1/task/update-site')
+      .map((r: Response) => {
+        return r.json();
+      });
+  }
+
+  public crawlerRecord(site) {
+    return this.http
+      .get(this.serverUrl + '/api/v1/record/' + site)
       .map((r: Response) => {
         return r.json();
       });

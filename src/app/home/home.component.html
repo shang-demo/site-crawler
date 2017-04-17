@@ -2,10 +2,16 @@
   <md-toolbar>
     <div class="toolbar">
       <div class="left">
-        <button (click)="reload()" md-raised-button [routerLink]=" ['./'] "
-                routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <button md-raised-button
+                (click)="reload()"
+                [routerLink]="['./']"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
           SiteCrawler
         </button>
+
+        <button md-raised-button
+        (click)="openDialog()">站点选择</button>
         <!--<button md-raised-button [routerLink]=" ['./site-list'] "-->
         <!--routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">-->
         <!--setting-->

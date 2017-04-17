@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SiteService } from '../site/site.service';
-import { MdSnackBar } from '@angular/material';
+import { MdDialog, MdSnackBar } from '@angular/material';
+import { SiteSettingComponent } from '../site-setting/site-setting.component';
 
 @Component({
   // The selector is what angular internally uses
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit {
   public updateTime: string;
 
   constructor(private siteService: SiteService,
-              private snackBar: MdSnackBar) {
+              private snackBar: MdSnackBar,
+              private dialog: MdDialog) {
   }
 
   public ngOnInit(): void {
@@ -52,6 +54,14 @@ export class HomeComponent implements OnInit {
 
   public reload() {
     this.siteService.scrollDown(true);
+  }
+
+  public openDialog() {
+    let dialogRef = this.dialog.open(SiteSettingComponent);
+    dialogRef.afterClosed()
+      .subscribe((result) => {
+        console.info(result);
+      });
   }
 
 }

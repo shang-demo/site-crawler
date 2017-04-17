@@ -1,0 +1,18 @@
+<table class="table" align="center">
+  <thead class="thead-default">
+  <tr>
+    <th>名称</th>
+    <th>简介</th>
+    <th>最后更新时间</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let site of sites">
+    <th scope="row">{{site.site}}</th>
+    <td>
+      <a href="{{site.url}}" target="_blank">{{site.description}}</a>
+    </td>
+    <td>{{site.updatedAt | date : 'yy/MM/dd hh:mm:ss'}}</td>
+  </tr>
+  </tbody>
+</table>

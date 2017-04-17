@@ -23,6 +23,7 @@ import { HomeComponent } from './home';
 import '../styles/styles.scss';
 import { SiteListComponent } from './site-list/site-list.component';
 import { SiteService } from './site/site.service';
+import { SiteSettingComponent } from './site-setting/site-setting.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -45,6 +46,7 @@ type StoreType = {
     AppComponent,
     HomeComponent,
     SiteListComponent,
+    SiteSettingComponent,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
@@ -53,7 +55,10 @@ type StoreType = {
     HttpModule,
     MaterialModule.forRoot(),
     SlimLoadingBarModule.forRoot(),
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+  ],
+  entryComponents: [
+    SiteSettingComponent,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
