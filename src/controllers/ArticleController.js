@@ -178,7 +178,15 @@ const ctrl = {
     let projection = '-record';
 
     return CrawlerLog.findOne(conditions, projection, options)
+      .lean()
       .then((data) => {
+        allSites.forEach((site) => {
+          if (site.site === ctx.params.site) {
+            data.description = site.description;
+            data.url = site.requestConfig.url;
+          }
+        });
+
         ctx.body = data;
       })
       .catch((e) => {
