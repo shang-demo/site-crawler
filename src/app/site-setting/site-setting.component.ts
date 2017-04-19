@@ -22,7 +22,7 @@ export class SiteSettingComponent implements OnInit {
     this.siteService.sites.forEach((name) => {
       this.siteService.crawlerRecord(name)
         .subscribe((result) => {
-        console.info('result: ', result);
+          console.info('result: ', result);
           this.sites.push(result);
           console.info('this.sites: ', this.sites);
         });
