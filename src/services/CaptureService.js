@@ -117,7 +117,7 @@ module.exports.allSites = [{
   description: '浏览迷(原浏览器之家)是一个关注浏览器及软件、IT的科技博客,致力于为广大浏览器爱好者提供一个关注浏览器、交流浏览器、折腾浏览器的专门网站',
   classify: 'info',
   requestConfig: {
-    url: 'http://liulanmi.com/'
+    url: 'https://liulanmi.com/'
   },
   parseConfig: {
     mode: 'css',
