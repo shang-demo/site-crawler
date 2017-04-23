@@ -19,14 +19,6 @@ module.exports.routes = {
   'post /api/:version(v\\d+)/cmd': 'ExecuteCmdController.execCmd',
   '/api/:version(v\\d+)/cmd/token': 'ExecuteCmdController.generateToken',
 
-  // webhook
-  'get /api/v1/webhook/event': 'WebhookController.queryEvent',
-  'get /api/v1/webhook': 'WebhookController.query',
-  'get /api/v1/webhook/:id': 'WebhookController.get',
-  'post /api/v1/webhook': 'WebhookController.create',
-  'put /api/v1/webhook/:id': 'WebhookController.update',
-  'delete /api/v1/webhook/:id': 'WebhookController.destroy',
-
   'post /api/v1/parser': 'ParserController.parse',
 
   // 未找到
