@@ -51,9 +51,9 @@
   },
   "push": {
     "dev": {
-      "url": "",
+      "url": "git@github.com:shang-demo/site-parser.git",
       "remote": "origin",
-      "branch": ""
+      "branch": "develop"
     },
     "deploy": {
       "url": "git@gitlab.com:demoshang/server-projects.git",
