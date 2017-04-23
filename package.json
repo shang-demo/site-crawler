@@ -29,7 +29,8 @@
     "redis": "^2.7.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
-    "split2": "^2.1.1"
+    "split2": "^2.1.1",
+    "website-parser": "^0.0.2"
   },
   "devDependencies": {
     "ava": "^0.18.2",

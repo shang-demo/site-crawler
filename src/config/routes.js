@@ -27,6 +27,8 @@ module.exports.routes = {
   'put /api/v1/webhook/:id': 'WebhookController.update',
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
+  'post /api/v1/parser': 'ParserController.parse',
+
   // 未找到
   '/*': async function viewHtml(ctx) {
     ctx.status = 404;
