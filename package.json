@@ -1,5 +1,5 @@
 {
-  "name": "serverTemplate",
+  "name": "site-crawler-service",
   "version": "0.1.0",
   "author": "SHANG",
   "license": "MIT",
@@ -50,9 +50,9 @@
   },
   "push": {
     "dev": {
-      "url": "git@github.com:shang-demo/server-template.git",
-      "remote": "template",
-      "branch": "v2"
+      "url": "",
+      "remote": "origin",
+      "branch": ""
     },
     "deploy": {
       "url": "git@gitlab.com:demoshang/server-projects.git",
