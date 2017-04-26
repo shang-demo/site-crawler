@@ -1,10 +1,10 @@
 {
-  "name": "site-parser",
+  "name": "site-parser-service",
   "version": "0.1.0",
   "author": "SHANG",
   "license": "MIT",
   "engines": {
-    "node": ">=7.6.0"
+    "node": "*"
   },
   "scripts": {
     "start": "gulp",
@@ -51,9 +51,9 @@
   },
   "push": {
     "dev": {
-      "url": "git@github.com:shang-demo/site-parser.git",
+      "url": "git@github.com:shang-demo/site-crawler.git",
       "remote": "origin",
-      "branch": "develop"
+      "branch": "__package_name__"
     },
     "deploy": {
       "url": "git@gitlab.com:demoshang/server-projects.git",
