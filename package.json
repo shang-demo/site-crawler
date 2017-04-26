@@ -30,7 +30,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
     "split2": "^2.1.1",
-    "website-parser": "^0.0.2"
+    "website-parser": "shang-package/website-parser#master"
   },
   "devDependencies": {
     "ava": "^0.18.2",
