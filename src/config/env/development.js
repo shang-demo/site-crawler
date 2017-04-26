@@ -37,6 +37,13 @@ module.exports = {
   bootstrap: [
     'WebhookService',
   ],
+  proxiesCache: {
+    ttl: 3600,
+    requestOptions: {
+      url: 'http://gather-proxy.leanapp.cn/api/v1/combine?nu=2',
+      json: true,
+    },
+  },
 };
 
 

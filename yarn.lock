@@ -228,7 +228,7 @@ async-settle@^1.0.0:
   dependencies:
     async-done "^1.2.2"
 
-async@1.5, async@^1.5:
+async@1.5, async@1.5.2, async@^1.5:
   version "1.5.2"
   resolved "http://registry.npm.taobao.org/async/download/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
@@ -745,6 +745,13 @@ builtin-modules@^1.0.0, builtin-modules@^1.1.1:
 bytes@2.4.0:
   version "2.4.0"
   resolved "http://registry.npm.taobao.org/bytes/download/bytes-2.4.0.tgz#7d97196f9d5baf7f6935e25985549edd2a6c2339"
+
+cache-manager@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-2.4.0.tgz#272e4eee3a4ecebb281fcb086499804e59a6a251"
+  dependencies:
+    async "1.5.2"
+    lru-cache "4.0.0"
 
 caching-transform@^1.0.0:
   version "1.0.1"
@@ -2385,6 +2392,10 @@ iconv-lite@0.4.15:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
+iconv-lite@^0.4.16:
+  version "0.4.16"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.16.tgz#65de3beeb39e2960d67f049f1634ffcbcde9014b"
+
 ignore-by-default@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ignore-by-default/-/ignore-by-default-1.0.1.tgz#48ca6d72f6c6a3af00a9ad4ae6876be3889e2b09"
@@ -3244,6 +3255,13 @@ lru-cache@2:
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.7.3.tgz#6d4524e8b955f95d4f5b58851ce21dd72fb4e952"
 
+lru-cache@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.0.0.tgz#b5cbf01556c16966febe54ceec0fb4dc90df6c28"
+  dependencies:
+    pseudomap "^1.0.1"
+    yallist "^2.0.0"
+
 lru-cache@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.0.2.tgz#1d17679c069cda5d040991a09dbc2c0db377e55e"
@@ -3911,9 +3929,9 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "http://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-pino@shang-packages/pino:
+pino@shang-package/pino:
   version "3.4.0"
-  resolved "https://codeload.github.com/shang-packages/pino/tar.gz/48eeaabfd27a4e65daae0a235a4be612e2d78b90"
+  resolved "https://codeload.github.com/shang-package/pino/tar.gz/cd6def9ca02fcd8705a1610ec7183da092c20940"
   dependencies:
     chalk "^1.1.1"
     fast-json-parse "^1.0.0"
@@ -3921,7 +3939,7 @@ pino@shang-packages/pino:
     flatstr "^1.0.4"
     once "^1.3.3"
     pump "^1.0.2"
-    quick-format "github:shang-packages/quick-format"
+    quick-format "github:shang-package/quick-format"
     split2 "^2.0.1"
 
 pkg-conf@^2.0.0:
@@ -4097,9 +4115,9 @@ qs@^6.4.0, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-"quick-format@github:shang-packages/quick-format":
+"quick-format@github:shang-package/quick-format":
   version "2.0.6"
-  resolved "https://codeload.github.com/shang-packages/quick-format/tar.gz/e62b8deb180a760973dfdb3b43a50a55e86b2f67"
+  resolved "https://codeload.github.com/shang-package/quick-format/tar.gz/e62b8deb180a760973dfdb3b43a50a55e86b2f67"
   dependencies:
     fast-safe-stringify "^1.0.8"
 
@@ -4327,7 +4345,7 @@ replace-ext@0.0.1:
 
 request-promise-core@1.1.1:
   version "1.1.1"
-  resolved "http://registry.npm.taobao.org/request-promise-core/download/request-promise-core-1.1.1.tgz#3eee00b2c5aa83239cfb04c5700da36f81cd08b6"
+  resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.1.tgz#3eee00b2c5aa83239cfb04c5700da36f81cd08b6"
   dependencies:
     lodash "^4.13.1"
 
@@ -4426,6 +4444,10 @@ restore-cursor@^2.0.0:
   dependencies:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
+
+retry@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/retry/-/retry-0.10.1.tgz#e76388d217992c252750241d3d3956fed98d8ff4"
 
 rimraf@2, rimraf@^2.2.8, rimraf@~2.5.1, rimraf@~2.5.4:
   version "2.5.4"
@@ -4620,8 +4642,8 @@ stack-utils@^1.0.0:
   resolved "http://registry.npm.taobao.org/statuses/download/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
 
 stealthy-require@^1.0.0:
-  version "1.0.0"
-  resolved "http://registry.npm.taobao.org/stealthy-require/download/stealthy-require-1.0.0.tgz#1a8ed8fc19a8b56268f76f5a1a3e3832b0c26200"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.0.tgz#ca61cf38766158ea819a0a1b0070b35de957f9b0"
 
 stream-combiner@~0.0.4:
   version "0.0.4"
@@ -5122,6 +5144,24 @@ vxx@^1.0.3:
     semver "^5.0.1"
     shimmer "^1.0.0"
     uuid "^2.0.1"
+
+website-crawler@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/website-crawler/-/website-crawler-0.0.1.tgz#497bb1c092f2c8f289b053d8b6fe0add32544225"
+  dependencies:
+    bluebird "^3.5.0"
+    iconv-lite "^0.4.16"
+    request "^2.81.0"
+    retry "^0.10.1"
+
+website-crawler@shang-package/website-crawler#master:
+  version "0.0.1"
+  resolved "https://codeload.github.com/shang-package/website-crawler/tar.gz/a32e125a97a0798fef2743ba0ca243c8c8edf382"
+  dependencies:
+    bluebird "^3.5.0"
+    iconv-lite "^0.4.16"
+    request "^2.81.0"
+    retry "^0.10.1"
 
 which@^1.2.12, which@^1.2.9:
   version "1.2.12"

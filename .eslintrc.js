@@ -6,6 +6,7 @@ module.exports = {
     _: false,
     config: false,
     Constants: false,
+    CrawlerService: false,
     Errors: false,
     ExecuteCmdService: false,
     HookService: false,
