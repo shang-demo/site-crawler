@@ -1,5 +1,8 @@
 # site-parser
 
+## dependency
+[website-parser](https://github.com/shang-package/website-parser)
+
 ## Example
 
 ```bash
