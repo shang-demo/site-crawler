@@ -156,8 +156,8 @@ module.exports.allSites = [
           type: 'SelectorText',
           multiple: false,
           id: 'date',
-          selector: 'span.muted:nth-of-type(1)',
-          regex: '',
+          selector: 'p:nth-of-type(1)',
+          regex: '\\d.*?前',
           delay: ''
         },
         {
@@ -299,4 +299,7 @@ module.exports.allSites = [
       _id: 'xclient'
     },
     transform: transformXCLIENT,
+    pageFun(index) {
+      return `http://xclient.info/s/${index}`;
+    },
   }];
