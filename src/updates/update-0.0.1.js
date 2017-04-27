@@ -6,6 +6,14 @@ function lift() {
   logger.info('update-0.0.1 lift');
   sites = CaptureService.allSites;
 
+  _.forEachRight(sites, (siteInfo, index) => {
+    if (siteInfo.site === 'iqq') {
+      sites.splice(index, 1);
+    }
+  });
+
+  // sites.length = 1;
+
   return Promise
     .try(() => {
       return getSiteConfig();
@@ -57,13 +65,13 @@ function parseArgs(args) {
 function captureAll() {
   sites.forEach((item) => {
     if (item.pageFun) {
-      item.requestConfig.url = item.pageFun(item.curPage);
+      item.requestOptions.url = item.pageFun(item.curPage);
     }
     else {
-      item.requestConfig.url = item.requestConfig.url.replace(/(page\/\d+)+/, '');
-      item.requestConfig.url = `${item.requestConfig.url}page/${item.curPage}`;
+      item.requestOptions.url = item.requestOptions.url.replace(/(page\/\d+)+/, '');
+      item.requestOptions.url = `${item.requestOptions.url}page/${item.curPage}`;
     }
-    item.url = item.requestConfig.url;
+    item.url = item.requestOptions.url;
   });
 
   return Promise
