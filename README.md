@@ -1,6 +1,6 @@
 # site-crawler
 
-## [backend](https://github.com/shang-demo/site-crawler/tree/backend-v2)
+## [backend-v2](https://github.com/shang-demo/site-crawler/tree/backend-v2)
 基于koa的采集器后端程序, 提供采集哪些站点 和 定时采集
 
 ## [frontend](https://github.com/shang-demo/site-crawler/tree/frontend)
@@ -11,3 +11,7 @@
 
 ## [site-parser-service](https://github.com/shang-demo/site-crawler/tree/site-parser-service)
 基于 [website-parser](https://github.com/shang-package/website-parser), 提供解析html服务
+
+
+## [backend](https://github.com/shang-demo/site-crawler/tree/backend) 
+**DEPRECATED** 使用老版 `gather-site` 实现的采集服务, 已经被[backend-v2](https://github.com/shang-demo/site-crawler/tree/backend-v2)代替
