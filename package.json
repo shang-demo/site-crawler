@@ -54,7 +54,7 @@
     "dev": {
       "url": "git@github.com:shang-demo/site-crawler.git",
       "remote": "dev",
-      "branch": "backend"
+      "branch": "backend-v2"
     },
     "deploy": {
       "url": "git@gitlab.com:demoshang/server-projects.git",

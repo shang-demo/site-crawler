@@ -1,11 +1,4 @@
-const proxyConfig = {
-  urls: ['https://gather-proxy.leanapp.cn/api/v1/combine?nu=2'],
-  beforeProxies: [null],
-  afterProxies: [null],
-};
-
-// const proxyConfig = null;
-const gather = require('gather-site').defaults(null, null, proxyConfig);
+const rp = require('request-promise');
 
 const { gatherTags, minUpdateLen, articleUpdateLen } = Constants;
 const { allSites } = CaptureService;
@@ -63,14 +56,21 @@ const ctrl = {
   async crawler(siteInfo) {
     logger.info('start update site： ', siteInfo.site);
 
-    return Promise
-      .try(() => {
-        return gather(_.assign({
-          timeout: 15 * 1000
-        }, siteInfo.requestConfig), siteInfo.parseConfig);
+    return rp(_.assign({
+      body: {
+        requestOptions: siteInfo.requestOptions,
+      }
+    }, mKoa.config.request.crawler))
+      .then((data) => {
+        return rp(_.assign({
+          body: {
+            html: data.html,
+            sitemap: siteInfo.sitemap,
+          }
+        }, mKoa.config.request.parser));
       })
       .then((data) => {
-        return data.articleList || [];
+        return siteInfo.transform(data);
       })
       .map((article) => {
         return ctrl.addArticleGatherTag(article);
@@ -79,6 +79,7 @@ const ctrl = {
         if (article.gatherTag === gatherTags.same) {
           return article;
         }
+
         article.site = siteInfo.site;
 
         return Article
@@ -183,7 +184,7 @@ const ctrl = {
         allSites.forEach((site) => {
           if (site.site === ctx.params.site) {
             data.description = site.description;
-            data.url = site.requestConfig.url;
+            data.url = site.requestOptions.url;
           }
         });
 

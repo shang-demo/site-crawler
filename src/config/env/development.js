@@ -1,4 +1,3 @@
-
 module.exports = {
   log: {
     level: 'trace',
@@ -37,6 +36,18 @@ module.exports = {
   bootstrap: [
     'WebhookService',
   ],
+  request: {
+    parser: {
+      url: 'http://site-parser-service.leanapp.cn/api/v1/parser',
+      json: true,
+      method: 'POST',
+    },
+    crawler: {
+      url: 'http://site-crawler-service.leanapp.cn/api/v1/crawler',
+      json: true,
+      method: 'POST',
+    },
+  },
 };
 
 
