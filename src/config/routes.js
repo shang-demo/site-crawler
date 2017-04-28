@@ -37,6 +37,10 @@ module.exports.routes = {
   // task
   'get /api/v1/task/update-site': 'ArticleController.taskUpdate',
 
+  // version
+  '/': 'ExecuteCmdController.deployVersion',
+  '/version': 'ExecuteCmdController.deployVersion',
+
   // 未找到
   '/*': async function viewHtml(ctx) {
     ctx.status = 404;
