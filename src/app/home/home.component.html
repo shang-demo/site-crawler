@@ -24,7 +24,7 @@
       <div class="right">
         <button md-button (click)="forceUpdate()">
           <label *ngIf="updateTime">
-            更新时间: {{updateTime | date : 'yy/MM/dd hh:mm:ss'}}
+            更新时间: {{updateTime | date : 'yy/MM/dd HH:mm:ss'}}
           </label>
           <label *ngIf="!updateTime">
             更新时间: 未知
