@@ -10,7 +10,7 @@
   <tr *ngFor="let site of sites">
     <th scope="row">{{site.site}}</th>
     <td>
-      <a href="{{site.url}}" target="_blank">{{site.description}}</a>
+      <a href="{{site.href}}" target="_blank">{{site.description}}</a>
     </td>
     <td>{{site.updatedAt | date : 'yy/MM/dd hh:mm:ss'}}</td>
   </tr>

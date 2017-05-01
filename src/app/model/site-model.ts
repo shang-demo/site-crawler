@@ -1,13 +1,12 @@
 export class Site {
-  _id?: string;
-  classify: string;
-  createdAt: string;
-  gatherTime: number;
   href: string;
-  img: string;
-  intro: string;
   site: string;
-  time: number;
-  title: string;
-  updatedAt: string;
+  _id?: string;
+  gatherTime?: number;
+  img?: string;
+  intro?: string;
+  title?: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
