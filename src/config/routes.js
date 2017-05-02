@@ -27,6 +27,9 @@ module.exports.routes = {
   'put /api/v1/webhook/:id': 'WebhookController.update',
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
+  // version
+  '/': 'ExecuteCmdController.deployVersion',
+  '/version': 'ExecuteCmdController.deployVersion',
 
   'post /api/v1/crawler': 'CrawlerController.crawler',
   'get /api/v1/crawler': 'CrawlerController.crawlerGet',
