@@ -28,7 +28,6 @@ export class SiteService {
   constructor(private http: Http,
               private slimLoader: SlimLoadingBarService) {
     this.searchSubject
-      .debounceTime(300)
       .distinctUntilChanged()
       .switchMap(() => {
         this.slimLoader.start();
