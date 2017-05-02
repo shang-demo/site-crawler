@@ -8,9 +8,6 @@ const svc = {
   async crawler(requestOptions, config = {}) {
     if (!config.proxies) {
       requestOptions.proxies = await this.getProxies();
-      // 第一次 和 最后一次 不设置代理
-      requestOptions.proxies.unshift(null);
-      requestOptions.proxies.push(null);
     }
 
     return crawler(requestOptions, config);
@@ -22,11 +19,21 @@ const svc = {
           .then((data) => {
             logger.info('cache proxies: ', data);
             return data;
+          })
+          .then((data) => {
+            let arr = data.map((item) => {
+              return item.url;
+            });
+
+            // 第一次 和 最后一次 不设置代理
+            arr.unshift(null);
+            arr.push(null);
+            return arr;
           });
       })
       .catch((e) => {
         logger.warn(e);
-        return [null];
+        return [null, null];
       });
   },
 };
