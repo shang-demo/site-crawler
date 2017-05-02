@@ -7,7 +7,7 @@ const memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: mKoa.
 const svc = {
   async crawler(requestOptions, config = {}) {
     if (!config.proxies) {
-      requestOptions.proxies = await this.getProxies();
+      config.proxies = await this.getProxies();
     }
 
     return crawler(requestOptions, config);
@@ -17,7 +17,6 @@ const svc = {
       .wrap('proxies', () => {
         return rp(mKoa.config.proxiesCache.requestOptions)
           .then((data) => {
-            logger.info('cache proxies: ', data);
             return data;
           })
           .then((data) => {
@@ -28,6 +27,7 @@ const svc = {
             // 第一次 和 最后一次 不设置代理
             arr.unshift(null);
             arr.push(null);
+            logger.info('cache proxies: ', arr);
             return arr;
           });
       })
