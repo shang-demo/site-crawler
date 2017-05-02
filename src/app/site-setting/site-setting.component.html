@@ -12,7 +12,11 @@
     <td>
       <a href="{{site.href}}" target="_blank">{{site.description}}</a>
     </td>
-    <td>{{site.updatedAt | date : 'yy/MM/dd HH:mm:ss'}}</td>
+    <td class="time">
+      <div [ngBusy]="ngBusy[site.site]">
+        {{site.updatedAt | date : 'yy/MM/dd HH:mm:ss'}}
+      </div>
+    </td>
   </tr>
   </tbody>
 </table>

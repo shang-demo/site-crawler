@@ -12,3 +12,17 @@ a:hover {
   color: #0a6ebd;
   text-decoration: underline;
 }
+
+a:focus {
+  outline: none;
+}
+
+.time {
+  height: 46px;
+  display: inline-block;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100px;
+  margin: 0;
+  padding: 0;
+}

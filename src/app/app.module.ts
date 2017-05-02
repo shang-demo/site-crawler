@@ -2,9 +2,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { NgModule, ApplicationRef } from '@angular/core';
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import { RouterModule, PreloadAllModules } from '@angular/router';
+import { ApplicationRef, NgModule } from '@angular/core';
+import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
+import { PreloadAllModules, RouterModule } from '@angular/router';
 import { MaterialModule } from '@angular/material';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -23,6 +23,7 @@ import '../styles/styles.scss';
 import { SiteListComponent } from './site-list/site-list.component';
 import { SiteService } from './site/site.service';
 import { SiteSettingComponent } from './site-setting/site-setting.component';
+import { BusyModule } from 'angular2-busy';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -50,6 +51,7 @@ type StoreType = {
   imports: [ // import Angular's modules
     BrowserAnimationsModule,
     BrowserModule,
+    BusyModule,
     InfiniteScrollModule,
     FormsModule,
     HttpModule,
