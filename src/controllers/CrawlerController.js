@@ -16,6 +16,19 @@ const ctrl = {
       html: result,
     };
   },
+  async crawlerPipe(ctx) {
+    let url = ctx.request.query.url;
+    let config = { stream: true };
+
+    try {
+      let result = await CrawlerService.crawler({ url }, config);
+      ctx.body = result.toStream();
+    }
+    catch (e) {
+      ctx.wrapError(e);
+    }
+  },
 };
 
 module.exports = ctrl;
+

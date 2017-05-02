@@ -31,6 +31,7 @@ module.exports.routes = {
   '/': 'ExecuteCmdController.deployVersion',
   '/version': 'ExecuteCmdController.deployVersion',
 
+  'get /api/v1/crawler/stream': 'CrawlerController.crawlerPipe',
   'post /api/v1/crawler': 'CrawlerController.crawler',
   'get /api/v1/crawler': 'CrawlerController.crawlerGet',
 
