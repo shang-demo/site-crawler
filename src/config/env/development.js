@@ -40,7 +40,7 @@ module.exports = {
   proxiesCache: {
     ttl: 3600,
     requestOptions: {
-      url: 'http://gather-proxy.leanapp.cn/api/v1/combine?nu=2',
+      url: 'https://proxy-crawler.leanapp.cn/api/v1/proxy?limit=3',
       json: true,
     },
   },
