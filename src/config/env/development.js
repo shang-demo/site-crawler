@@ -43,7 +43,7 @@ module.exports = {
       method: 'POST',
     },
     crawler: {
-      url: 'http://site-crawler-service.leanapp.cn/api/v1/crawler',
+      url: 'http://site-crawler-service.xinshangshangxin.com/api/v1/crawler',
       json: true,
       method: 'POST',
     },
