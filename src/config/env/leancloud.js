@@ -1,3 +1,5 @@
+const PASSWORD = process.env.MONGODB_PASSWORD;
+const DATABASE = 'leancloud';
 
 module.exports = {
   log: {
@@ -5,13 +7,11 @@ module.exports = {
     requestBody: true,
     responseBody: false,
   },
-  useLeanStorage: true,
   connections: {
     defaultMongo: {
-      dbName: 'noDbName',
-      appId: process.env.APP_ID,
-      appKey: process.env.APP_KEY,
-      masterKey: process.env.MASTER_KEY,
+      type: 'uri',
+      uri: `mongodb://q2234037172:${PASSWORD}@cluster0-shard-00-00-g30bn.mongodb.net:27017,cluster0-shard-00-01-g30bn.mongodb.net:27017,cluster0-shard-00-02-g30bn.mongodb.net:27017/${DATABASE}?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`,
+      collectionPrefix: '',
     },
   },
   auth: {
