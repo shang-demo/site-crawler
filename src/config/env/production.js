@@ -1,5 +1,4 @@
 
-
 module.exports = {
   log: {
     level: 'trace',
@@ -9,9 +8,15 @@ module.exports = {
   connections: {
     defaultMongo: {
       dbName: 'noDbName',
+      appId: process.env.APP_ID,
+      appKey: process.env.APP_KEY,
+      masterKey: process.env.MASTER_KEY,
     },
   },
-  superSecret: process.env.SUPER_SECRET || 'SUPER_SECRET',
+  auth: {
+    tokenExpiresIn: 7200,
+    superSecret: process.env.SUPER_SECRET || 'SUPER_SECRET',
+  },
   execCmdKey: process.env.EXEC_CMD_KEY || 'key',
   mailTransport: {
     host: 'smtp.sina.com',
@@ -29,4 +34,13 @@ module.exports = {
     ref: 'master',
   },
   port: process.env.PORT || 1337,
+  ip: undefined,
+  bootstrap: [],
+  proxiesCache: {
+    ttl: 3600,
+    requestOptions: {
+      url: 'https://proxy-crawler.leanapp.cn/api/v1/proxy?limit=3',
+      json: true,
+    },
+  },
 };
