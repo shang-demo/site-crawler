@@ -9,4 +9,5 @@ export class Site {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  disabled?: boolean;
 }

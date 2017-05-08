@@ -13,7 +13,7 @@ export class SiteService {
 
   public serverUrl = '//site-crawler.leanapp.cn';
   // public serverUrl = 'http://localhost:1337';
-  public imgServerUrl = '//site-crawler-service.leanapp.cn/api/v1/crawler/stream';
+  public imgServerUrl = '//site-crawler-service.xinshangshangxin.com/api/v1/crawler/stream';
 
   public sites = ['zd', 'xclient', 'llm'];
 

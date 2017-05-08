@@ -23,8 +23,14 @@ export class SiteSettingComponent implements OnInit {
     updatedAt: null,
   }, {
     site: 'xclient',
-    description: '爱Q生活网 - 亮亮\'blog -关注最新QQ活动动态, 掌握QQ第一资讯',
+    description: '精品MAC应用分享，每天分享大量mac软件，为您提供优质的mac破解软件,免费软件下载服务',
     href: 'http://xclient.info/s/',
+    updatedAt: null,
+  }, {
+    disabled: true,
+    site: 'iqq',
+    description: '爱Q生活网 - 亮亮\'blog -关注最新QQ活动动态, 掌握QQ第一资讯',
+    href: 'http://www.iqshw.com/',
     updatedAt: null,
   }];
 
@@ -54,8 +60,9 @@ export class SiteSettingComponent implements OnInit {
   public ngOnInit(): void {
     this.ngBusy.length = 0;
 
-    this.sites.forEach((site) => {
+    this.sites = this.sites.filter((site) => {
       delete site.updatedAt;
+      return !site.disabled;
     });
 
     this.siteService.sites.forEach((name) => {
