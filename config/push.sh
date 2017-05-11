@@ -41,6 +41,12 @@ function pushDeploy() {
   echo "cp ./package.json ./production/"
 	cp ./package.json ./production/
 
+	currentBranch=`git rev-parse --abbrev-ref HEAD`
+	currentHead=`git rev-parse HEAD`
+	pushDate=`date +%Y_%m_%d_%H_%M_%S`
+
+	echo ${currentBranch}-${pushDate}-${currentHead} > ./production/config/version.txt
+
   if [ -e ./config/Dockerfiles/${nodeEnv} ]
 	then
 	  cp ./config/Dockerfiles/${nodeEnv} ./production/Dockerfile
@@ -49,7 +55,7 @@ function pushDeploy() {
 	fi
 
   cd production
-  cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2 start .\/index.js --no-daemon\" | .devDependencies={}" > __package__.json
+  cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2-docker start .\/index.js --raw\" | .devDependencies={}" > __package__.json
 	rm package.json
 	mv __package__.json package.json
 

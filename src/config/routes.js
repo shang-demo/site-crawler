@@ -21,6 +21,10 @@ module.exports.routes = {
 
   'post /api/v1/parser': 'ParserController.parse',
 
+  // version
+  '/': 'ExecuteCmdController.deployVersion',
+  '/version': 'ExecuteCmdController.deployVersion',
+
   // 未找到
   '/*': async function viewHtml(ctx) {
     ctx.status = 404;
