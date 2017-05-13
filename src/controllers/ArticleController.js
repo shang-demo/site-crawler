@@ -1,5 +1,6 @@
 const rp = require('request-promise');
 
+const { transformResult } = CrawlerResultTransformService;
 const { gatherTags, minUpdateLen, articleUpdateLen } = Constants;
 const { allSites } = CaptureService;
 // const allSites = [CaptureService.allSites[1]];
@@ -70,7 +71,7 @@ const ctrl = {
         }, mKoa.config.request.parser));
       })
       .then((data) => {
-        return siteInfo.transform(data);
+        return transformResult(data, siteInfo.transform);
       })
       .map((article) => {
         return ctrl.addArticleGatherTag(article);

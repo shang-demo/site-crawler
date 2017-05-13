@@ -7,6 +7,7 @@ module.exports = {
     Article: false,
     CaptureService: false,
     CrawlerLog: false,
+    CrawlerResultTransformService: false,
     config: false,
     Constants: false,
     Errors: false,

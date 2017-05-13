@@ -1,70 +1,3 @@
-const { calculateTime } = require('./UtilService');
-
-/* eslint-disable no-mixed-operators */
-function transformZD(result) {
-  let now = new Date();
-
-  return _.map(result || [], (item, i) => {
-    let time = `${now.getFullYear()}-${item.date}`;
-
-    return {
-      img: item.img,
-      title: item.title,
-      href: item.href,
-      time: new Date(time).getTime() + 1000 - i,
-      gatherTime: now.getTime() + 1000 - i,
-      intro: item.intro,
-    };
-  });
-}
-
-function transformLLM(result) {
-  let now = new Date();
-
-  return _.map(result || [], (item, i) => {
-    let time = calculateTime(item.date);
-    return {
-      img: item.img,
-      title: item.title,
-      href: item.href,
-      time: new Date(time).getTime() + 1000 - i,
-      gatherTime: now.getTime() + 1000 - i,
-      intro: item.intro,
-    };
-  });
-}
-
-function transformXCLIENT(result) {
-  let now = new Date();
-
-  return _.map(result || [], (item, i) => {
-    let time = UtilService.calculateTime(item.date);
-    return {
-      img: item.img,
-      title: item.title,
-      href: item.href,
-      time: new Date(time).getTime() + 1000 - i,
-      gatherTime: now.getTime() + 1000 - i,
-      intro: item.intro,
-    };
-  });
-}
-
-function transformIQQ(result) {
-  let now = new Date();
-
-  return _.map(result || [], (item, i) => {
-    let time = `${now.getFullYear()}-${item.date}`;
-    return {
-      img: 'http://www.iqshw.com/templets/iqshw_new/logo.jpg',
-      title: item.title,
-      href: item.href,
-      time: new Date(time).getTime() + 1000 - i,
-      gatherTime: now.getTime() + 1000 - i,
-      intro: item.title,
-    };
-  });
-}
 
 module.exports.allSites = [
   {
@@ -124,7 +57,12 @@ module.exports.allSites = [
       startUrl: 'http://www.zdfans.com/',
       _id: 'zdfans'
     },
-    transform: transformZD,
+    transform: {
+      date: {
+        fn: 'formatDate',
+        param: 'MMDD',
+      },
+    },
   },
   {
     site: 'llm',
@@ -188,7 +126,12 @@ module.exports.allSites = [
         }],
       _id: 'llm'
     },
-    transform: transformLLM,
+    transform: {
+      date: {
+        fn: 'formatDate',
+        param: 'chinese-offset',
+      },
+    },
   },
   {
     site: 'iqq',
@@ -234,7 +177,24 @@ module.exports.allSites = [
         }],
       _id: 'iqshw'
     },
-    transform: transformIQQ,
+    transform: {
+      date: {
+        fn: 'formatDate',
+        param: 'MM/DD',
+      },
+      img: {
+        fn: 'defaultValue',
+        param: 'http://www.iqshw.com/templets/iqshw_new/logo.jpg'
+      },
+      intro: {
+        fn: 'setFieldValue',
+        param: 'title',
+      },
+      href: {
+        fn: 'addPrefix',
+        param: 'http://www.iqshw.com'
+      }
+    },
   },
   {
     site: 'xclient',
@@ -298,7 +258,12 @@ module.exports.allSites = [
         }],
       _id: 'xclient'
     },
-    transform: transformXCLIENT,
+    transform: {
+      date: {
+        fn: 'formatDate',
+        param: 'YYYYMMDD',
+      },
+    },
     pageFun(index) {
       return `http://xclient.info/s/${index}`;
     },
