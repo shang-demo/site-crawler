@@ -1,4 +1,3 @@
-
 module.exports.allSites = [
   {
     site: 'zd',
@@ -267,4 +266,82 @@ module.exports.allSites = [
     pageFun(index) {
       return `http://xclient.info/s/${index}`;
     },
-  }];
+  },
+  {
+    site: 'edu-ing',
+    requestOptions: {
+      url: 'http://www.edu-ing.cn/?paged=1'
+    },
+    transform: {
+      date: {
+        fn: 'formatDate',
+        param: 'YYYYMMDD',
+      },
+    },
+    sitemap: {
+      startUrl: 'http://www.edu-ing.cn/?paged=1',
+      selectors: [
+        {
+          parentSelectors: ['_root'],
+          type: 'SelectorElement',
+          multiple: true,
+          id: 'item',
+          selector: 'article.excerpt',
+          delay: ''
+        },
+        {
+          parentSelectors: ['item'],
+          type: 'SelectorText',
+          multiple: false,
+          id: 'title',
+          selector: 'h2 a',
+          regex: '',
+          delay: ''
+        },
+        {
+          parentSelectors: ['item'],
+          type: 'SelectorText',
+          multiple: false,
+          id: 'date',
+          selector: 'p.text-muted.time',
+          regex: '\\d{4}-\\d{2}-\\d{2}',
+          delay: ''
+        },
+        {
+          parentSelectors: ['item'],
+          type: 'SelectorLink',
+          multiple: false,
+          id: 'href',
+          selector: 'h2 a',
+          delay: ''
+        },
+        {
+          parentSelectors: ['item'],
+          type: 'SelectorText',
+          multiple: false,
+          id: 'intro',
+          selector: 'p.note',
+          regex: '',
+          delay: ''
+        },
+        {
+          parentSelectors: ['item'],
+          type: 'SelectorElement',
+          multiple: false,
+          id: 'img-ele',
+          selector: 'img.thumb',
+          delay: ''
+        },
+        {
+          parentSelectors: ['img-ele'],
+          type: 'SelectorElementAttribute',
+          multiple: false,
+          id: 'img',
+          selector: 'data-original',
+          extractAttribute: '',
+          delay: ''
+        }],
+      _id: 'edu-ing'
+    }
+  },
+];

@@ -3,7 +3,7 @@ const rp = require('request-promise');
 const { transformResult } = CrawlerResultTransformService;
 const { gatherTags, minUpdateLen, articleUpdateLen } = Constants;
 const { allSites } = CaptureService;
-// const allSites = [CaptureService.allSites[1]];
+// const allSites = [CaptureService.allSites[4]];
 
 // 服务器最新采集时间
 let updateTime = 0;
@@ -47,8 +47,8 @@ const ctrl = {
           conditions,
           options: {
             sort: {
+              gatherTime: -1,
               time: -1,
-              updatedAt: -1,
             }
           }
         });
