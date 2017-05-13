@@ -2,7 +2,7 @@
   "name": "site-parser-service",
   "version": "0.1.0",
   "main": "src/index.js",
-   "author": "xinshangshangxin <xinshangshangxin@gmail.com>",
+  "author": "xinshangshangxin <xinshangshangxin@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": "*"
@@ -31,7 +31,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
     "split2": "^2.1.1",
-    "website-parser": "shang-package/website-parser#master"
+    "website-parser": "^0.0.4"
   },
   "devDependencies": {
     "ava": "^0.18.2",

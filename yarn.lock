@@ -1734,8 +1734,8 @@ fast-levenshtein@~2.0.4:
   resolved "http://registry.npm.taobao.org/fast-levenshtein/download/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
 
 fast-safe-stringify@^1.0.8, fast-safe-stringify@^1.1.3:
-  version "1.1.6"
-  resolved "http://registry.npm.taobao.org/fast-safe-stringify/download/fast-safe-stringify-1.1.6.tgz#b30f4a55cbf657895a5b07b2c9c6fec91580802d"
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-1.1.13.tgz#a01e9cd9c9e491715c98a75a42d5f0bbd107ff76"
 
 fclone@1.0.10:
   version "1.0.10"
@@ -4208,9 +4208,9 @@ qs@^6.4.0, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-"quick-format@github:shang-packages/quick-format":
+"quick-format@github:shang-package/quick-format":
   version "2.0.6"
-  resolved "https://codeload.github.com/shang-packages/quick-format/tar.gz/e62b8deb180a760973dfdb3b43a50a55e86b2f67"
+  resolved "https://codeload.github.com/shang-package/quick-format/tar.gz/e62b8deb180a760973dfdb3b43a50a55e86b2f67"
   dependencies:
     fast-safe-stringify "^1.0.8"
 
@@ -5234,17 +5234,9 @@ vxx@^1.0.3:
     shimmer "^1.0.0"
     uuid "^2.0.1"
 
-website-parser@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/website-parser/-/website-parser-0.0.2.tgz#3a8dc000e964d8ab8614f76e9d64ffec61cd23e1"
-  dependencies:
-    cheerio "^0.22.0"
-    jquery-deferred "^0.3.1"
-    lodash "^4.17.4"
-
-website-parser@shang-package/website-parser#master:
-  version "0.0.2"
-  resolved "https://codeload.github.com/shang-package/website-parser/tar.gz/8e3622e67664da0704511a88589c68a702ee7768"
+website-parser@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/website-parser/-/website-parser-0.0.4.tgz#8dabc4ae04d6d9183cd176484cc8d997d66d6180"
   dependencies:
     cheerio "^0.22.0"
     jquery-deferred "^0.3.1"
