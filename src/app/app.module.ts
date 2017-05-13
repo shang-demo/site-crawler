@@ -24,6 +24,7 @@ import { SiteListComponent } from './site-list/site-list.component';
 import { SiteService } from './site/site.service';
 import { SiteSettingComponent } from './site-setting/site-setting.component';
 import { BusyModule } from 'angular2-busy';
+import { SiteImgPipe } from './site/site-img.pipe';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -47,6 +48,7 @@ type StoreType = {
     HomeComponent,
     SiteListComponent,
     SiteSettingComponent,
+    SiteImgPipe,
   ],
   imports: [ // import Angular's modules
     BrowserAnimationsModule,

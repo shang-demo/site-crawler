@@ -14,13 +14,12 @@ import { MdSnackBar } from '@angular/material';
   styleUrls: ['./site-list.component.scss'],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   templateUrl: './site-list.component.html',
+
 })
 
 export class SiteListComponent implements OnInit, OnDestroy {
 
   public sites: Site[] = [];
-
-  public imgServerUrl = this.siteService.imgServerUrl + '?url=';
 
   private searchItemsSubscription;
 

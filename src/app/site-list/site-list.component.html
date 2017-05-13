@@ -6,7 +6,7 @@
 >
   <div *ngFor="let site of sites">
     <div class="site">
-      <img class="left" src="{{imgServerUrl + site.img}}">
+      <img class="left" src="{{site.img | siteImg}}">
       <div class="right">
         <div class="header">
           <div class="title">

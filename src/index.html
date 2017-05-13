@@ -31,14 +31,14 @@
     }
 
     app:empty + .loading {
-      opacity: 0.1;
+      opacity: 0.2;
       z-index: 100;
     }
 
     app:empty + .loading h1 {
       color: #EEE;
       position: absolute;
-      top: 50%;
+      top: 40%;
       width: 100%;
       text-align: center;
       transform: translate(0, -50%);
@@ -50,7 +50,7 @@
 <body>
   <app></app>
   <div class="loading">
-    <h1>Loading...</h1>
+    <h1>本站点搭建在gitlab Pages, 如长时间显示本页面, 请翻墙访问</h1>
   </div>
 
   <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>

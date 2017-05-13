@@ -27,6 +27,11 @@ export class SiteSettingComponent implements OnInit {
     href: 'http://xclient.info/s/',
     updatedAt: null,
   }, {
+    site: 'edu-ing',
+    description: '嘻哈小屋-嘻哈无极限',
+    href: 'http://www.edu-ing.cn/?paged=1',
+    updatedAt: null,
+  }, {
     disabled: true,
     site: 'iqq',
     description: '爱Q生活网 - 亮亮\'blog -关注最新QQ活动动态, 掌握QQ第一资讯',
@@ -65,21 +70,25 @@ export class SiteSettingComponent implements OnInit {
       return !site.disabled;
     });
 
-    this.siteService.sites.forEach((name) => {
-      this.ngBusy[name] = {
-        busy: this.siteService.crawlerRecord(name)
-          .subscribe((result) => {
-            this.sites.forEach((site) => {
-              if (site.site === result.site) {
-                site.updatedAt = result.updatedAt;
-              }
-            });
-          }),
-        message: '',
-        wrapperClass: '',
-        template: this.busyTemplate,
-        backdrop: false,
-      };
-    });
+    this.sites
+      .map((site) => {
+        return site.site;
+      })
+      .forEach((name) => {
+        this.ngBusy[name] = {
+          busy: this.siteService.crawlerRecord(name)
+            .subscribe((result) => {
+              this.sites.forEach((site) => {
+                if (site.site === result.site) {
+                  site.updatedAt = result.updatedAt;
+                }
+              });
+            }),
+          message: '',
+          wrapperClass: '',
+          template: this.busyTemplate,
+          backdrop: false,
+        };
+      });
   }
 }
