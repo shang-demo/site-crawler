@@ -260,6 +260,15 @@ const svc = {
   compareTime(date1, date2, len) {
     return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) < len;
   },
+  tryParseJson(str) {
+    try {
+      return JSON.parse(str);
+    }
+    catch (e) {
+      logger.warn(e);
+      return null;
+    }
+  }
 };
 
 module.exports = svc;

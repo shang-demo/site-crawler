@@ -37,6 +37,12 @@ module.exports.routes = {
   // task
   'get /api/v1/task/update-site': 'ArticleController.taskUpdate',
 
+
+  'get /api/v1/crawler-rule': 'CrawlerRuleController.query',
+  'get /api/v1/crawler-rule/:id': 'CrawlerRuleController.get',
+  'post /api/v1/crawler-rule': 'CrawlerRuleController.create',
+
+
   // version
   '/': 'ExecuteCmdController.deployVersion',
   '/version': 'ExecuteCmdController.deployVersion',

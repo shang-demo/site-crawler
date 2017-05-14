@@ -18,6 +18,7 @@ module.exports = {
     mKoa: false,
     Mixed: false,
     Promise: false,
+    CrawlerRule: false,
     Webhook: false,
     UtilService: false,
   },
