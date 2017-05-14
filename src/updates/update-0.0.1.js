@@ -4,7 +4,6 @@ let sites = [];
 
 function lift() {
   logger.info('update-0.0.1 lift');
-  sites = CaptureService.allSites;
 
   _.forEachRight(sites, (siteInfo, index) => {
     if (siteInfo.site === 'iqq') {

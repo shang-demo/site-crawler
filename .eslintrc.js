@@ -5,9 +5,9 @@ module.exports = {
   globals: {
     _: false,
     Article: false,
-    CaptureService: false,
     CrawlerLog: false,
     CrawlerResultTransformService: false,
+    CrawlerService: false,
     config: false,
     Constants: false,
     Errors: false,
