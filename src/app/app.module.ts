@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { ApplicationRef, NgModule } from '@angular/core';
 import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
 import { PreloadAllModules, RouterModule } from '@angular/router';
-import { MaterialModule } from '@angular/material';
+import { MdButtonModule } from '@angular/material';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /*
@@ -57,7 +57,7 @@ type StoreType = {
     InfiniteScrollModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MdButtonModule,
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
   ],
