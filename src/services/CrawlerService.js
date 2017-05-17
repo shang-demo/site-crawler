@@ -3,6 +3,10 @@ const { transformResult } = require('./CrawlerResultTransformService');
 const { gatherTags } = require('./Constants');
 
 const svc = {
+  querySite: [],
+  async lift() {
+    return svc.updateShowArticleSites();
+  },
   async crawler(siteInfo) {
     logger.info('start update site： ', siteInfo.site);
 
@@ -97,6 +101,22 @@ const svc = {
 
         return article;
       });
+  },
+  async updateShowArticleSites() {
+    return CrawlerRule
+      .find({
+        isShowArticle: true,
+      }, {
+        site: 1,
+      })
+      .lean()
+      .then((data) => {
+        svc.querySite = _.map(data, 'site');
+        logger.info('querySite: ', svc.querySite);
+      });
+  },
+  getQuerySites() {
+    return svc.querySite;
   },
 };
 

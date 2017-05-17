@@ -37,7 +37,9 @@ module.exports = {
   },
   port: process.env.LEANCLOUD_APP_PORT || 8080,
   ip: undefined,
-  bootstrap: [],
+  bootstrap: [
+    'CrawlerService',
+  ],
   request: {
     parser: {
       url: 'http://site-parser-service.leanapp.cn/api/v1/parser',

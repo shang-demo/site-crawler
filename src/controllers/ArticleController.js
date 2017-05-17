@@ -5,19 +5,11 @@ let updateTime = 0;
 
 const ctrl = {
   async query(ctx) {
-    let conditions = {};
-    if (ctx.query.sites) {
-      conditions = {
-        site: {
-          $in: ctx.query.sites,
-        },
-      };
-    }
-    else {
-      conditions.site = {
-        $ne: 'iqq',
-      };
-    }
+    let conditions = {
+      site: {
+        $in: ctx.query.sites || CrawlerService.getQuerySites(),
+      },
+    };
 
     if (ctx.query.search) {
       conditions.$or = [{

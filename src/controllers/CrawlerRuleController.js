@@ -28,9 +28,15 @@ const ctrl = {
   async create(ctx) {
     let body = ctx.request.body;
 
-    body.requestOptions = UtilService.tryParseJson(body.requestOptions);
-    body.sitemap = UtilService.tryParseJson(body.sitemap);
-    body.transform = UtilService.tryParseJson(body.transform);
+    if (body.requestOptions) {
+      body.requestOptions = UtilService.tryParseJson(body.requestOptions);
+    }
+    if (body.sitemap) {
+      body.sitemap = UtilService.tryParseJson(body.sitemap);
+    }
+    if (body.transform) {
+      body.transform = UtilService.tryParseJson(body.transform);
+    }
 
     return CrawlerRule
       .findOneAndUpdate({
@@ -47,6 +53,12 @@ const ctrl = {
       })
       .catch((e) => {
         ctx.wrapError(e);
+      })
+      .then(() => {
+        CrawlerService.updateShowArticleSites()
+          .catch((e) => {
+            logger.warn(e);
+          });
       });
   },
 };
