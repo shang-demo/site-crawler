@@ -15,37 +15,8 @@ import { SiteService } from '../site/site.service';
 export class CrawlerRuleListComponent implements OnInit {
 
   public crawlerRules: CrawlerRule[];
-  public sitesKeyBySite;
 
   public ngBusy = [];
-  private sites: Site[] = [
-    {
-      site: 'zd',
-      description: '专注绿软，分享软件、传递最新软件资讯',
-      href: 'http://www.zdfans.com/',
-      updatedAt: null,
-    }, {
-      site: 'llm',
-      description: '浏览迷(原浏览器之家)是一个关注浏览器及软件、IT的科技博客,致力于为广大浏览器爱好者提供一个关注浏览器、交流浏览器、折腾浏览器的专门网站',
-      href: 'https://liulanmi.com/',
-      updatedAt: null,
-    }, {
-      site: 'xclient',
-      description: '精品MAC应用分享，每天分享大量mac软件，为您提供优质的mac破解软件,免费软件下载服务',
-      href: 'http://xclient.info/s/',
-      updatedAt: null,
-    }, {
-      site: 'edu-ing',
-      description: '嘻哈小屋-嘻哈无极限',
-      href: 'http://www.edu-ing.cn/?paged=1',
-      updatedAt: null,
-    }, {
-      disabled: true,
-      site: 'iqq',
-      description: '爱Q生活网 - 亮亮\'blog -关注最新QQ活动动态, 掌握QQ第一资讯',
-      href: 'http://www.iqshw.com/',
-      updatedAt: null,
-    }];
 
   private busyTemplate = `<div class="ng-busy-default-spinner">
       <div class="bar1"></div>
@@ -73,34 +44,55 @@ export class CrawlerRuleListComponent implements OnInit {
     this.crawlerRuleService.query()
       .subscribe((data) => {
         this.crawlerRules = data;
+        this.getRecords(data);
       }, (e) => {
         console.warn(e);
         this.snackBar.open('出错了~', 'ok', {
           duration: 5000,
         });
       });
+  }
 
-    this.sitesKeyBySite = this.sites.reduce((result, item) => {
-      result[item.site] = item;
-      return result;
-    }, {});
-
-    Object.keys(this.sitesKeyBySite)
-      .forEach((name) => {
-        this.ngBusy[name] = {
-          busy: this.siteService.crawlerRecord(name)
-            .subscribe((result) => {
-              this.sites.forEach((site) => {
-                if (site.site === result.site) {
-                  site.updatedAt = result.updatedAt;
-                }
-              });
-            }),
-          message: '',
-          wrapperClass: '',
-          template: this.busyTemplate,
-          backdrop: false,
-        };
+  public toggle(rule) {
+    this.crawlerRuleService
+      .save({
+        _id: rule._id,
+        site: rule.site,
+        isShowArticle: rule.isShowArticle,
+        isCrawler: rule.isCrawler,
+      })
+      .subscribe(() => {
+        this.snackBar.open('保存成功', 'ok', {
+          duration: 1000,
+        });
+      }, (e) => {
+        console.warn(e);
+        this.snackBar.open('出错了~', 'ok', {
+          duration: 5000,
+        });
       });
+  }
+
+  private getRecords(crawlerRules) {
+    crawlerRules.forEach((item) => {
+      this.getRecord(item.site);
+    });
+  }
+
+  private getRecord(name) {
+    this.ngBusy[name] = {
+      busy: this.siteService.crawlerRecord(name)
+        .subscribe((result) => {
+          this.crawlerRules.forEach((rule) => {
+            if (rule.site === result.site) {
+              rule.updatedAt = result.updatedAt;
+            }
+          });
+        }),
+      message: '',
+      wrapperClass: '',
+      template: this.busyTemplate,
+      backdrop: false,
+    };
   }
 }

@@ -32,20 +32,22 @@ export class CrawlerRuleService {
 
   public get(id: string): Observable<CrawlerRule> {
     let url = this.serverUrl + '/api/v1/crawler-rule/' + id;
-
+    this.slimLoader.start();
     return this.http
       .get(url)
       .map((r: Response) => {
+        this.slimLoader.complete();
         return r.json() as CrawlerRule;
       });
   }
 
   public save(body: object): Observable<CrawlerRule> {
     let url = this.serverUrl + '/api/v1/crawler-rule';
-
+    this.slimLoader.start();
     return this.http
       .post(url, body)
       .map((r: Response) => {
+        this.slimLoader.complete();
         return r.json() as CrawlerRule;
       });
   }

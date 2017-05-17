@@ -10,20 +10,10 @@
 
   <br>
   <br>
-  <!--<div *ngFor="let rule of crawlerRules">-->
-    <!--<div>-->
-      <!--<button md-raised-button [routerLink]=" ['/rule-detail', rule.id] "-->
-              <!--routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">-->
-        <!--{{rule.site}}-->
-      <!--</button>-->
-      <!--<a href="{{rule.requestOptions.url}}" target="_blank">{{rule.requestOptions.url}}</a>-->
-    <!--</div>-->
-  <!--</div>-->
-
-
   <table class="table" align="center">
     <thead class="thead-default">
     <tr>
+      <th>操作</th>
       <th>名称</th>
       <th>简介</th>
       <th>最后更新时间</th>
@@ -31,6 +21,10 @@
     </thead>
     <tbody>
     <tr *ngFor="let rule of crawlerRules">
+      <td>
+        <md-checkbox (change)="toggle(rule)" [(ngModel)]="rule.isShowArticle">显示文章</md-checkbox>
+        <!--<md-checkbox (change)="toggle(rule)" [(ngModel)]="rule.isCrawler">采集文章</md-checkbox>-->
+      </td>
       <td scope="row">
         <button md-raised-button [routerLink]=" ['/rule-detail', rule.id] "
                 routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -38,11 +32,11 @@
         </button>
       </td>
       <td>
-        <a href="{{sitesKeyBySite[rule.site].href}}" target="_blank">{{sitesKeyBySite[rule.site].description}}</a>
+        <a href="{{rule.href}}" target="_blank">{{rule.description}}</a>
       </td>
       <td class="time">
         <div [ngBusy]="ngBusy[rule.site]">
-          {{sitesKeyBySite[rule.site].updatedAt | date : 'yy/MM/dd HH:mm:ss'}}
+          {{rule.updatedAt | date : 'yy/MM/dd HH:mm:ss'}}
         </div>
       </td>
     </tr>

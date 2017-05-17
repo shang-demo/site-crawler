@@ -1,8 +1,22 @@
 <div class="container">
   <form (ngSubmit)="save()"  #heroForm="ngForm">
-    <md-input-container>
-      <input mdInput placeholder="站点代号" [(ngModel)]="crawlerRule.site" name="site">
-    </md-input-container>
+    <p>
+      <md-input-container>
+        <input mdInput placeholder="站点代号" [(ngModel)]="crawlerRule.site" name="site">
+      </md-input-container>
+    </p>
+
+    <p>
+      <md-input-container>
+        <input mdInput placeholder="描述" [(ngModel)]="crawlerRule.description" name="description">
+      </md-input-container>
+    </p>
+
+    <p>
+      <md-input-container>
+        <input mdInput placeholder="链接" [(ngModel)]="crawlerRule.href" name="href">
+      </md-input-container>
+    </p>
 
     <p>
       <md-input-container>
@@ -20,9 +34,16 @@
       </md-input-container>
     </p>
 
-    <md-input-container>
-      <input mdInput placeholder="pageRule" [(ngModel)]="crawlerRule.pageRule" name="pageRule">
-    </md-input-container>
+    <p>
+      <md-input-container>
+        <input mdInput placeholder="pageRule" [(ngModel)]="crawlerRule.pageRule" name="pageRule">
+      </md-input-container>
+    </p>
+
+    <p>
+      <md-checkbox [(ngModel)]="crawlerRule.isShowArticle" name="isShowArticle">显示文章</md-checkbox>
+      <md-checkbox [(ngModel)]="crawlerRule.isCrawler" name="isCrawler">采集文章</md-checkbox>
+    </p>
 
     <button md-raised-button type="submit">保存</button>
     <button md-raised-button [routerLink]=" ['/rule-list'] "

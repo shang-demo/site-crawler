@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CrawlerRule } from '../model/crawler-rule-model';
 import { CrawlerRuleService } from '../crawler-rule/crawler-rule.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +23,15 @@ export class CrawlerRuleEditComponent implements OnInit {
     console.log('hello `Crawler-Rule-Edit` component');
 
     this.activeRoute.params.subscribe((params) => {
+      if (!params.id) {
+        this.crawlerRule = {
+          site: '',
+          isShowArticle: true,
+          isCrawler: true,
+        };
+        return;
+      }
+
       this.crawlerRuleService.get(params.id)
         .subscribe((data) => {
           this.crawlerRule = data;
