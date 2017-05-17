@@ -42,14 +42,13 @@ const ctrl = {
           conditions,
           options: {
             sort: {
+              date: -1,
               gatherTime: -1,
-              time: -1,
             }
           }
         });
       });
   },
-
   async taskUpdate(ctx) {
     if (new Date().getTime() - new Date(updateTime).getTime() < minUpdateLen) {
       logger.info('last update in 2 min');

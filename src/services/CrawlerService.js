@@ -85,7 +85,7 @@ const svc = {
           article.gatherTag = gatherTags.new;
         }
         else if (article.date !== _article.date) {
-          logger.info('article.date: ', article.date, 'origin: ', _article.date);
+          logger.info('article.date: ', article.date, 'origin: ', _article.date, article.href);
           article.gatherTag = gatherTags.updateContent;
         }
         else if (article.img !== _article.img) {

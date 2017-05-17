@@ -8,7 +8,7 @@ const svc = {
 
     if (!date.isValid()) {
       logger.warn('not valid date for ', dateStr, fmt);
-      return new Date().getTime();
+      return undefined;
     }
 
     return date.toDate().getTime();
