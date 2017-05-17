@@ -32,7 +32,7 @@ const METADATA = {
   isDevServer: helpers.isWebpackDevServer(),
   SERVER_URL: {
     default: 'http://localhost:1337',
-    prod: 'http://localhost:1337'
+    prod: '//site-crawler.leanapp.cn'
   },
 };
 

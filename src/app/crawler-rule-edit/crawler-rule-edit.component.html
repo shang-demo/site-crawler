@@ -1,0 +1,35 @@
+<div class="container">
+  <form (ngSubmit)="save()"  #heroForm="ngForm">
+    <md-input-container>
+      <input mdInput placeholder="站点代号" [(ngModel)]="crawlerRule.site" name="site">
+    </md-input-container>
+
+    <p>
+      <md-input-container>
+        <textarea rows="3" mdInput placeholder="requestOptions" [(ngModel)]="crawlerRule.requestOptions" name="requestOptions"></textarea>
+      </md-input-container>
+    </p>
+    <p>
+      <md-input-container>
+        <textarea rows="2" mdInput placeholder="sitemap" [(ngModel)]="crawlerRule.sitemap" name="sitemap"></textarea>
+      </md-input-container>
+    </p>
+    <p>
+      <md-input-container>
+        <textarea rows="8" mdInput placeholder="transform" [(ngModel)]="crawlerRule.transform" name="transform"></textarea>
+      </md-input-container>
+    </p>
+
+    <md-input-container>
+      <input mdInput placeholder="pageRule" [(ngModel)]="crawlerRule.pageRule" name="pageRule">
+    </md-input-container>
+
+    <button md-raised-button type="submit">保存</button>
+    <button md-raised-button [routerLink]=" ['/rule-list'] "
+            routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      取消
+    </button>
+  </form>
+
+</div>
+

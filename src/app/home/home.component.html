@@ -10,12 +10,10 @@
           SiteCrawler
         </button>
 
-        <button md-raised-button
-        (click)="openDialog()">站点选择</button>
-        <!--<button md-raised-button [routerLink]=" ['./site-list'] "-->
-        <!--routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">-->
-        <!--setting-->
-        <!--</button>-->
+        <button md-raised-button [routerLink]=" ['/rule-list'] "
+                routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          站点管理
+        </button>
 
         <md-input-container class="search">
           <input mdInput placeholder="搜索内容" #searchBox (keyup)="search(searchBox.value)">

@@ -11,11 +11,8 @@ export class SiteService {
     return this.siteSubject.asObservable();
   }
 
-  public serverUrl = '//site-crawler.leanapp.cn';
-  // public serverUrl = 'http://localhost:1337';
+  public serverUrl = 'SERVER_URL';
   public imgServerUrl = '//site-crawler-service.xinshangshangxin.com/api/v1/crawler/stream';
-
-  public sites = ['zd', 'xclient', 'llm'];
 
   private meta = {
     page: 1,

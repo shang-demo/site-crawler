@@ -1,11 +1,11 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ApplicationRef, NgModule } from '@angular/core';
 import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
 import { PreloadAllModules, RouterModule } from '@angular/router';
-import { MdButtonModule } from '@angular/material';
+import { MaterialModule } from '@angular/material';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /*
@@ -25,6 +25,10 @@ import { SiteService } from './site/site.service';
 import { SiteSettingComponent } from './site-setting/site-setting.component';
 import { BusyModule } from 'angular2-busy';
 import { SiteImgPipe } from './site/site-img.pipe';
+import { AdminComponent } from './admin/admin.component';
+import { CrawlerRuleService } from './crawler-rule/crawler-rule.service';
+import { CrawlerRuleListComponent } from './crawler-rule-list/crawler-rule-list.component';
+import { CrawlerRuleEditComponent } from './crawler-rule-edit/crawler-rule-edit.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -41,6 +45,7 @@ type StoreType = {
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
+
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -49,6 +54,8 @@ type StoreType = {
     SiteListComponent,
     SiteSettingComponent,
     SiteImgPipe,
+    CrawlerRuleListComponent,
+    CrawlerRuleEditComponent,
   ],
   imports: [ // import Angular's modules
     BrowserAnimationsModule,
@@ -56,8 +63,9 @@ type StoreType = {
     BusyModule,
     InfiniteScrollModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
-    MdButtonModule,
+    MaterialModule,
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
   ],
@@ -68,6 +76,7 @@ type StoreType = {
     ENV_PROVIDERS,
     APP_PROVIDERS,
     SiteService,
+    CrawlerRuleService,
   ],
 })
 export class AppModule {

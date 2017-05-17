@@ -52,7 +52,7 @@ export class SiteListComponent implements OnInit, OnDestroy {
         this.sites.push(...sites);
       });
 
-    this.siteService.scrollDown();
+    this.siteService.scrollDown(true);
   }
 
   public onScrollDown() {
