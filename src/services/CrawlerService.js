@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const { transformResult } = require('./CrawlerResultTransformService');
-const { gatherTags, articleUpdateLen } = require('./Constants');
+const { gatherTags } = require('./Constants');
 
 const svc = {
   async crawler(siteInfo) {
@@ -84,8 +84,8 @@ const svc = {
         if (!_article) {
           article.gatherTag = gatherTags.new;
         }
-        // 作者文章更新时间超过 articleUpdateLen
-        else if (!UtilService.compareTime(article.time, _article.time, articleUpdateLen)) {
+        else if (article.date !== _article.date) {
+          logger.info('article.date: ', article.date, 'origin: ', _article.date);
           article.gatherTag = gatherTags.updateContent;
         }
         else if (article.img !== _article.img) {

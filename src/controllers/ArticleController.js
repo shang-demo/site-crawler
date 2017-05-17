@@ -66,7 +66,14 @@ const ctrl = {
         return CrawlerRule.find({}).lean();
       })
       .map((site) => {
-        return CrawlerService.crawler(site);
+        return CrawlerService.crawler(site)
+          .catch((e) => {
+            logger.warn(site.site);
+            logger.warn(e);
+          });
+      })
+      .catch((e) => {
+        logger.warn(e);
       });
   },
   async crawlerRecord(ctx) {

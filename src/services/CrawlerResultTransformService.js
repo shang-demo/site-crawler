@@ -1,3 +1,4 @@
+const moment = require('moment');
 const TimerParserService = require('./TimerParserService');
 
 const svc = {
@@ -35,12 +36,15 @@ const svc = {
         item[key] = svc.transformOne(obj, item, key);
       });
 
+      let date = moment(item.date).startOf('day').format('YYYYMMDD');
+
       return {
-        img: item.img,
-        title: item.title,
+        date,
         href: item.href,
-        time: new Date(item.date).getTime() + (1000 - i),
+        title: item.title,
         gatherTime: now.getTime() + (1000 - i),
+        img: item.img,
+        time: new Date(item.date).getTime() + (1000 - i),
         intro: item.intro,
       };
     });

@@ -1,16 +1,17 @@
 const moment = require('moment');
 
-const { timeConversion, chineseMothMap, englishMonthMao } = require('./Constants');
+const { chineseMothMap, englishMonthMao } = require('./Constants');
 
 const svc = {
   calculateTime(dateStr, fmt) {
     let date = this.formatDate(dateStr, fmt);
 
-    if (!moment.isDate(date)) {
+    if (!date.isValid()) {
       logger.warn('not valid date for ', dateStr, fmt);
       return new Date().getTime();
     }
-    return date.getTime();
+
+    return date.toDate().getTime();
   },
   formatDate(dateStr, fmt = 'YYYYMMDD') {
     /* eslint-disable no-param-reassign */
@@ -33,7 +34,7 @@ const svc = {
       });
     }
 
-    return moment(dateStr, fmt).toDate();
+    return moment(dateStr, fmt);
   },
   offsetChinese(dateStr) {
     let key;
@@ -62,7 +63,7 @@ const svc = {
       return null;
     }
 
-    return new Date(new Date() - (parseInt(dateStr, 10) * timeConversion[key]));
+    return moment().subtract(parseInt(dateStr, 10), key);
   }
 };
 

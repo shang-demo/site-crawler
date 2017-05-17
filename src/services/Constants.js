@@ -52,5 +52,4 @@ module.exports = {
     same: 5,
   },
   minUpdateLen: 2 * 60 * 1000,
-  articleUpdateLen: 23 * 60 * 60 * 1000, // 23小时
 };
