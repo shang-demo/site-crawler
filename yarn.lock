@@ -5275,9 +5275,9 @@ vxx@^1.2.0:
     shimmer "^1.0.0"
     uuid "^3.0.1"
 
-website-crawler@shang-package/website-crawler#master:
-  version "0.0.3"
-  resolved "https://codeload.github.com/shang-package/website-crawler/tar.gz/0058d6a766f7d74f6836e93a69ecf1d017e278ca"
+website-crawler@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/website-crawler/-/website-crawler-0.1.0.tgz#543500dcf0faf5621325c06256db587de7f9fc8c"
   dependencies:
     bluebird "^3.5.0"
     iconv-lite "^0.4.17"

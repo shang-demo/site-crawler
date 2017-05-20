@@ -31,7 +31,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
     "split2": "^2.1.1",
-    "website-crawler": "shang-package/website-crawler#master"
+    "website-crawler": "^0.1.0"
   },
   "devDependencies": {
     "ava": "^0.18.2",

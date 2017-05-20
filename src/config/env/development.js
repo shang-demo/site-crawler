@@ -3,7 +3,7 @@ module.exports = {
   log: {
     level: 'trace',
     requestBody: true,
-    responseBody: true,
+    responseBody: false,
   },
   connections: {
     defaultMongo: {
