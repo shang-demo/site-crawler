@@ -8,7 +8,12 @@ const RetryStrategy = crawler.RetryStrategy;
 const memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: mKoa.config.proxiesCache.ttl });
 
 const svc = {
+  zdRequestOptions: null,
   zdJar: request.jar(),
+  getZdRequestOptions() {
+    svc.zdRequestOptions.jar = svc.zdJar;
+    return _.assign({}, svc.zdRequestOptions);
+  },
   async crawler(requestOptions, config = {}) {
     if (!config.proxies) {
       config.proxies = await this.getProxies();
@@ -88,6 +93,7 @@ const svc = {
             .then((url) => {
               requestOptions.url = url;
               newUrl = url;
+              svc.zdRequestOptions = requestOptions;
 
               return crawler(requestOptions, {
                 disableChangeEncoding: true,

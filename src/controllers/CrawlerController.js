@@ -17,11 +17,19 @@ const ctrl = {
     };
   },
   async crawlerPipe(ctx) {
-    let url = ctx.request.query.url;
+    let requestOptions = {
+      url: ctx.request.query.url,
+    };
     let config = { stream: true };
 
+    if (/zdfans\.com/.test(requestOptions.url)) {
+      requestOptions = CrawlerService.getZdRequestOptions();
+      requestOptions.url = ctx.request.query.url;
+    }
+
+
     try {
-      let result = await CrawlerService.crawler({ url }, config);
+      let result = await CrawlerService.crawler(requestOptions, config);
       ctx.body = result.toStream();
     }
     catch (e) {
