@@ -13,7 +13,10 @@ const svc = {
     return rp(_.assign({
       body: {
         requestOptions: siteInfo.requestOptions,
-      }
+      },
+      config: {
+        site: siteInfo.site,
+      },
     }, mKoa.config.request.crawler))
       .then((data) => {
         return rp(_.assign({
