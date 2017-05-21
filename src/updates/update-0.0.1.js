@@ -1,20 +1,20 @@
 const ArticleController = require('../controllers/ArticleController');
 
-let sites = [];
+let siteRules = [];
 
 function lift() {
   logger.info('update-0.0.1 lift');
 
-  _.forEachRight(sites, (siteInfo, index) => {
-    if (siteInfo.site === 'iqq') {
-      sites.splice(index, 1);
-    }
-  });
-
-  // sites.length = 1;
-
   return Promise
     .try(() => {
+      return CrawlerRule.find({}).lean();
+    })
+    .then((_siteRules) => {
+      siteRules = _.filter(_siteRules, (rule) => {
+        return rule.site != 'iqq';
+      });
+    })
+    .then(() => {
       return getSiteConfig();
     })
     .then(() => {
@@ -25,10 +25,10 @@ function lift() {
 function getSiteConfig() {
   let sitesConfig = parseArgs(process.argv.slice(2));
 
-  _.forEachRight(sites, (item, i) => {
+  _.forEachRight(siteRules, (item, i) => {
     let siteConfig = sitesConfig[item.site];
     if (!siteConfig || siteConfig.disabled) {
-      sites.splice(i, 1);
+      siteRules.splice(i, 1);
       return;
     }
 
@@ -42,7 +42,7 @@ function getSiteConfig() {
 
 function parseArgs(args) {
   let defaultConfig = {};
-  _.forEach(sites, (item) => {
+  _.forEach(siteRules, (item) => {
     defaultConfig[item.site] = {};
   });
 
@@ -62,7 +62,7 @@ function parseArgs(args) {
 
 // 采集所有页面
 function captureAll() {
-  sites.forEach((item) => {
+  siteRules.forEach((item) => {
     if (item.pageFun) {
       item.requestOptions.url = item.pageFun(item.curPage);
     }
@@ -74,8 +74,8 @@ function captureAll() {
   });
 
   return Promise
-    .all(sites.map((item) => {
-      return ArticleController.crawler(item)
+    .all(siteRules.map((item) => {
+      return CrawlerService.crawler(item)
         .catch((e) => {
           logger.warn(e);
           return {
@@ -87,18 +87,18 @@ function captureAll() {
       _.forEachRight(data, (siteResult, i) => {
         if (!siteResult.record.total || siteResult.record.updateFailed) {
           // eslint-disable-next-line no-plusplus
-          sites[i].canErrNu--;
+          siteRules[i].canErrNu--;
           logger.warn('siteResult: ', siteResult);
         }
         else {
-          logger.info('site success: ', siteResult.site, sites[i].curPage);
-          sites[i].canErrNu = 3;
+          logger.info('site success: ', siteResult.site, siteRules[i].curPage);
+          siteRules[i].canErrNu = 3;
           // eslint-disable-next-line no-plusplus
-          sites[i].curPage++;
+          siteRules[i].curPage++;
         }
 
-        if (sites[i].canErrNu < 0) {
-          sites.splice(i, 1);
+        if (siteRules[i].canErrNu < 0) {
+          siteRules.splice(i, 1);
         }
       });
     })
