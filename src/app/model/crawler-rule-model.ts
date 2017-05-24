@@ -3,7 +3,7 @@ export class CrawlerRule {
   public requestOptions?: object;
   public sitemap?: object;
   public transform?: object;
-  public pageRule?: string;
+  public nextPageRequestOptions?: object;
   public description?: string;
   public href?: string;
   public isShowArticle?: boolean;
