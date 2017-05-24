@@ -18,6 +18,8 @@ export class CrawlerRuleListComponent implements OnInit {
 
   public ngBusy = [];
 
+  public serverUrl = 'SERVER_URL';
+
   private busyTemplate = `<div class="ng-busy-default-spinner">
       <div class="bar1"></div>
       <div class="bar2"></div>
