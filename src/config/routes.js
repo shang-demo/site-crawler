@@ -27,6 +27,9 @@ module.exports.routes = {
   'put /api/v1/webhook/:id': 'WebhookController.update',
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
+  'post /api/v1/eval/zd': 'EvalController.evalZDFans',
+  'post /api/v1/eval': 'EvalController.eval',
+
   // version
   '/': 'ExecuteCmdController.deployVersion',
   '/version': 'ExecuteCmdController.deployVersion',

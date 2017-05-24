@@ -33,7 +33,7 @@ module.exports = {
   update: {
     ref: 'master',
   },
-  port: process.env.PORT || 1337,
+  port: process.env.PORT || 40002,
   bootstrap: [
     // 'WebhookService',
   ],
