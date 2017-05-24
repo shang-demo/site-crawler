@@ -30,10 +30,6 @@ module.exports = {
     href: {
       type: String,
     },
-    // 从第二页开始的url
-    pageRule: {
-      type: String,
-    },
     // 是否显示文章
     isShowArticle: {
       type: Boolean,
@@ -43,6 +39,10 @@ module.exports = {
     isCrawler: {
       type: Boolean,
       default: true,
+    },
+    // 从第二页开始的url
+    nextPageRequestOptions: {
+      type: Mixed,
     },
   },
 };

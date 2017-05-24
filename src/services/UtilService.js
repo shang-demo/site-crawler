@@ -39,7 +39,7 @@ const svc = {
     };
     // set ENV
     let env = Object.create(process.env);
-    env.NODE_ENV = option.NODE_ENV || process.env.NODE_ENV;
+    env.NODE_ENV = (option.NODE_ENV || process.env.NODE_ENV || 'development').trim();
     opt.env = env;
 
     let proc = spawn(option.cmd, option.arg, opt);
@@ -68,7 +68,7 @@ const svc = {
       let opt = { stdio: 'inherit' };
       // set ENV
       let env = Object.create(process.env);
-      env.NODE_ENV = option.NODE_ENV || process.env.NODE_ENV;
+      env.NODE_ENV = (option.NODE_ENV || process.env.NODE_ENV || 'development').trim();
       opt.env = env;
 
       let cmd = spawn(option.cmd, option.arg, opt);

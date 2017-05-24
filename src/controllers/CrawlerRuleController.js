@@ -37,6 +37,9 @@ const ctrl = {
     if (body.transform) {
       body.transform = UtilService.tryParseJson(body.transform);
     }
+    if (body.nextPageRequestOptions) {
+      body.nextPageRequestOptions = UtilService.tryParseJson(body.nextPageRequestOptions);
+    }
 
     return CrawlerRule
       .findOneAndUpdate({

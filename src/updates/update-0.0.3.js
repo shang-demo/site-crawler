@@ -6,7 +6,11 @@ function lift() {
   return Promise
     .try(() => {
       return Article
-        .find({})
+        .find({
+          date: {
+            $gte: moment().subtract(3, 'day').format('YYYYMMDD'),
+          },
+        })
         .lean()
         .then((data) => {
           return data;
@@ -17,7 +21,7 @@ function lift() {
         .update({
           _id: article._id
         }, {
-          date: moment(article.time).startOf('day').format('YYYYMMDD'),
+          date: moment(article.time).subtract(1, 'year').format('YYYYMMDD'),
         });
     }, {
       concurrency: 100,

@@ -1,8 +1,6 @@
-const ArticleController = require('../controllers/ArticleController');
-
 let siteRules = [];
 
-function lift() {
+function lift(argStr) {
   logger.info('update-0.0.1 lift');
 
   return Promise
@@ -11,19 +9,20 @@ function lift() {
     })
     .then((_siteRules) => {
       siteRules = _.filter(_siteRules, (rule) => {
-        return rule.site != 'iqq';
+        return rule.site !== 'iqq';
       });
     })
     .then(() => {
-      return getSiteConfig();
+      return getSiteConfig(argStr);
     })
     .then(() => {
       return captureAll();
     });
 }
 
-function getSiteConfig() {
-  let sitesConfig = parseArgs(process.argv.slice(2));
+function getSiteConfig(argStr) {
+  let sitesConfig = parseArgs(argStr);
+  logger.info('sitesConfig: ', sitesConfig);
 
   _.forEachRight(siteRules, (item, i) => {
     let siteConfig = sitesConfig[item.site];
@@ -32,12 +31,13 @@ function getSiteConfig() {
       return;
     }
 
-    item.curPage = siteConfig.curPage || 1;
+    item.curPage = siteConfig.curPage || 2;
     item.canErrNu = siteConfig.canErrNu || 3;
 
     item.isUpdate = true;
     item.isErr = false;
   });
+  logger.info('siteRules: ', siteRules);
 }
 
 function parseArgs(args) {
@@ -60,21 +60,31 @@ function parseArgs(args) {
   return defaultConfig;
 }
 
+function replace(obj, map) {
+  let str = JSON.stringify(obj);
+  let replaceStr = str.replace(/{{([^{}]+)}}/gi, (match, p1) => {
+    return map[p1];
+  });
+  try {
+    return JSON.parse(replaceStr);
+  }
+  catch (e) {
+    logger.warn(e);
+    return obj;
+  }
+}
+
 // 采集所有页面
 function captureAll() {
   siteRules.forEach((item) => {
-    if (item.pageFun) {
-      item.requestOptions.url = item.pageFun(item.curPage);
+    if (item.nextPageRequestOptions && item.curPage > 1) {
+      item.requestOptions = replace(item.nextPageRequestOptions, item);
     }
-    else {
-      item.requestOptions.url = item.requestOptions.url.replace(/(page\/\d+)+/, '');
-      item.requestOptions.url = `${item.requestOptions.url}page/${item.curPage}`;
-    }
-    item.url = item.requestOptions.url;
   });
 
   return Promise
     .all(siteRules.map((item) => {
+      logger.info('item.requestOptions: ', item.requestOptions);
       return CrawlerService.crawler(item)
         .catch((e) => {
           logger.warn(e);

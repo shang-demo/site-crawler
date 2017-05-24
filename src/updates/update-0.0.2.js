@@ -342,7 +342,7 @@ const defaultCrawlerRules = [
           delay: ''
         }],
       _id: 'edu-ing'
-    }
+    },
   },
 ];
 

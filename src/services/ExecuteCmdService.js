@@ -31,7 +31,7 @@ function userDefine(userOptionObj) {
 }
 
 function updateFun(str, argStr) {
-  let arg = ['--harmony-async-await', path.resolve(__dirname, '../updates/update'), str];
+  let arg = [path.resolve(__dirname, '../updates/update'), str];
   if (argStr) {
     arg.push(argStr);
   }

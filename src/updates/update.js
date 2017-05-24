@@ -1,6 +1,7 @@
 const My = require('../init/index');
 
 const updateFile = process.argv[2];
+const argStr = process.argv[3];
 
 function update() {
   const lift = new My({ alias: 'mKoa' })
@@ -22,7 +23,7 @@ function update() {
         .try(() => {
           /* eslint-disable global-require */
           /* eslint-disable import/no-dynamic-require */
-          return require(`./${updateFile}`)();
+          return require(`./${updateFile}`)(argStr);
         })
         .then((data) => {
           lift.emit('update-success', data);
