@@ -64,6 +64,15 @@ const ctrl = {
           });
       });
   },
+  async export(ctx) {
+    let rules = await CrawlerRule.find({}).lean();
+    let buffer = new Buffer(JSON.stringify(rules));
+    ctx.set({
+      'Content-Type': 'application/octet-stream',
+      'Content-Disposition': 'attachment; filename=rule.json'
+    });
+    ctx.body = buffer;
+  },
 };
 
 module.exports = ctrl;
