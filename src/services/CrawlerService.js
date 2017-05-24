@@ -63,6 +63,7 @@ const svc = {
       return `http://www.zdfans.com/cdn-cgi/l/chk_jschl?jschl_vc=${encodeURIComponent(jschlVc)}&pass=${encodeURIComponent(pass)}&jschl_answer=${jschlAnswe}`;
     }
 
+    requestOptions.encoding = requestOptions.encoding || null;
     requestOptions.headers = requestOptions.headers || {};
     requestOptions.headers['User-Agent'] = requestOptions.headers['User-Agent'] ||
       {
@@ -78,6 +79,7 @@ const svc = {
 
     return crawler(requestOptions,
       {
+        disableEncodingCheck: true,
         proxies: config.proxies,
         requestRetryStrategy(err, response) {
           logger.info('response.statusCode1: ', response.statusCode);
