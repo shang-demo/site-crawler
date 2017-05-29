@@ -1,5 +1,19 @@
 <div class="container">
-  <form (ngSubmit)="save()"  #heroForm="ngForm">
+  <a (click)="isShowImport=!isShowImport; isShowExport=false;" md-raised-button>导入</a>
+  <a (click)="exportCrawlerRule()" md-raised-button>导出</a>
+  <md-grid-list cols="5" *ngIf="isShowImport || isShowExport">
+    <md-grid-tile colspan="4">
+      <md-input-container>
+        <textarea rows="10" mdInput placeholder="JSON" [(ngModel)]="crawlerRuleImportExport" #copyTarget></textarea>
+      </md-input-container>
+    </md-grid-tile>
+    <md-grid-tile colspan="1">
+      <a md-raised-button *ngIf="isShowImport" (click)="importCrawlerRule()" >确认导入</a>
+      <button md-raised-button *ngIf="isShowExport" [ngxClipboard]="copyTarget">复制</button>
+    </md-grid-tile>
+  </md-grid-list>
+
+  <form (ngSubmit)="save()" #heroForm="ngForm">
     <p>
       <md-input-container>
         <input mdInput placeholder="站点代号" [(ngModel)]="crawlerRule.site" name="site">
@@ -20,7 +34,8 @@
 
     <p>
       <md-input-container>
-        <textarea rows="3" mdInput placeholder="requestOptions" [(ngModel)]="crawlerRule.requestOptions" name="requestOptions"></textarea>
+        <textarea rows="3" mdInput placeholder="requestOptions" [(ngModel)]="crawlerRule.requestOptions"
+                  name="requestOptions"></textarea>
       </md-input-container>
     </p>
     <p>
@@ -30,13 +45,15 @@
     </p>
     <p>
       <md-input-container>
-        <textarea rows="8" mdInput placeholder="transform" [(ngModel)]="crawlerRule.transform" name="transform"></textarea>
+        <textarea rows="8" mdInput placeholder="transform" [(ngModel)]="crawlerRule.transform"
+                  name="transform"></textarea>
       </md-input-container>
     </p>
 
     <p>
       <md-input-container>
-        <textarea rows="2" mdInput placeholder="nextPageRequestOptions" [(ngModel)]="crawlerRule.nextPageRequestOptions" name="nextPageRequestOptions"></textarea>
+        <textarea rows="2" mdInput placeholder="nextPageRequestOptions" [(ngModel)]="crawlerRule.nextPageRequestOptions"
+                  name="nextPageRequestOptions"></textarea>
       </md-input-container>
     </p>
 
@@ -45,11 +62,15 @@
       <md-checkbox [(ngModel)]="crawlerRule.isCrawler" name="isCrawler">采集文章</md-checkbox>
     </p>
 
-    <button md-raised-button type="submit">保存</button>
     <button md-raised-button [routerLink]=" ['/rule-list'] "
             routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       取消
     </button>
+    <button md-raised-button type="submit">保存</button>
+
+    <a (click)="preview()" md-raised-button>预览</a>
+
+
   </form>
 
 </div>

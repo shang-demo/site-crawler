@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { CrawlerRule } from '../model/crawler-rule-model';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
+import { Site } from '../model/site-model';
 
 @Injectable()
 export class CrawlerRuleService {
@@ -49,6 +50,17 @@ export class CrawlerRuleService {
       .map((r: Response) => {
         this.slimLoader.complete();
         return r.json() as CrawlerRule;
+      });
+  }
+
+  public preview(body: object): Observable<Site[]> {
+    let url = this.serverUrl + '/api/v1/crawler-rule/preview';
+    this.slimLoader.start();
+    return this.http
+      .post(url, body)
+      .map((r: Response) => {
+        this.slimLoader.complete();
+        return r.json() as Site[];
       });
   }
 }

@@ -12,9 +12,13 @@
           <div class="title">
             <a target="_blank" href="{{site.href}}">[{{site.site}}] {{site.title}}</a>
           </div>
-          <div class="date">
+          <div class="date" *ngIf="site.updatedAt">
             {{site.updatedAt | date : 'yy/MM/dd HH:mm:ss'}}
           </div>
+          <div class="date" *ngIf="!site.updatedAt">
+            {{site.date}}
+          </div>
+
         </div>
         <div class="intro">
           {{site.intro}}

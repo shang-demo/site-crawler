@@ -29,6 +29,8 @@ import { AdminComponent } from './admin/admin.component';
 import { CrawlerRuleService } from './crawler-rule/crawler-rule.service';
 import { CrawlerRuleListComponent } from './crawler-rule-list/crawler-rule-list.component';
 import { CrawlerRuleEditComponent } from './crawler-rule-edit/crawler-rule-edit.component';
+import { ClipboardModule } from 'ngx-clipboard/dist';
+import { DialogPreviewComponent } from './dialog-preview/dialog-preview.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -56,6 +58,7 @@ type StoreType = {
     SiteImgPipe,
     CrawlerRuleListComponent,
     CrawlerRuleEditComponent,
+    DialogPreviewComponent,
   ],
   imports: [ // import Angular's modules
     BrowserAnimationsModule,
@@ -68,9 +71,11 @@ type StoreType = {
     MaterialModule,
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    ClipboardModule,
   ],
   entryComponents: [
     SiteSettingComponent,
+    DialogPreviewComponent,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
