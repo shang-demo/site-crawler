@@ -31,6 +31,12 @@ const svc = {
       })
       .map((article) => {
         return svc.addArticleGatherTag(article);
+      });
+  },
+  async crawlerAndSave(siteInfo) {
+    return Promise
+      .try(() => {
+        return svc.crawler(siteInfo);
       })
       .map((article) => {
         if (article.gatherTag === gatherTags.same) {

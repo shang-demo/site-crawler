@@ -1,4 +1,20 @@
 const ctrl = {
+  async transformBody(body) {
+    if (body.requestOptions) {
+      body.requestOptions = UtilService.tryParseJson(body.requestOptions);
+    }
+    if (body.sitemap) {
+      body.sitemap = UtilService.tryParseJson(body.sitemap);
+    }
+    if (body.transform) {
+      body.transform = UtilService.tryParseJson(body.transform);
+    }
+    if (body.nextPageRequestOptions) {
+      body.nextPageRequestOptions = UtilService.tryParseJson(body.nextPageRequestOptions);
+    }
+
+    return body;
+  },
   async query(ctx) {
     let conditions = {};
 
@@ -26,20 +42,7 @@ const ctrl = {
       });
   },
   async create(ctx) {
-    let body = ctx.request.body;
-
-    if (body.requestOptions) {
-      body.requestOptions = UtilService.tryParseJson(body.requestOptions);
-    }
-    if (body.sitemap) {
-      body.sitemap = UtilService.tryParseJson(body.sitemap);
-    }
-    if (body.transform) {
-      body.transform = UtilService.tryParseJson(body.transform);
-    }
-    if (body.nextPageRequestOptions) {
-      body.nextPageRequestOptions = UtilService.tryParseJson(body.nextPageRequestOptions);
-    }
+    let body = await ctrl.transformBody(ctx.request.body);
 
     return CrawlerRule
       .findOneAndUpdate({
@@ -72,6 +75,18 @@ const ctrl = {
       'Content-Disposition': 'attachment; filename=rule.json'
     });
     ctx.body = buffer;
+  },
+  async preview(ctx) {
+    let body = await ctrl.transformBody(ctx.request.body);
+
+    return CrawlerService.crawler(body)
+      .then((result) => {
+        ctx.body = result;
+        return null;
+      })
+      .catch((e) => {
+        ctx.wrapError(e);
+      });
   },
 };
 

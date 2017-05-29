@@ -86,7 +86,7 @@ function captureAll() {
   return Promise
     .all(siteRules.map((item) => {
       logger.info('item.requestOptions: ', item.requestOptions);
-      return CrawlerService.crawler(item)
+      return CrawlerService.crawlerAndSave(item)
         .catch((e) => {
           logger.warn(e);
           return {

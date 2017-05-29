@@ -57,7 +57,7 @@ const ctrl = {
         return CrawlerRule.find({}).lean();
       })
       .map((site) => {
-        return CrawlerService.crawler(site)
+        return CrawlerService.crawlerAndSave(site)
           .catch((e) => {
             logger.warn(site.site);
             logger.warn(e);

@@ -40,6 +40,7 @@ module.exports.routes = {
   'get /api/v1/crawler-rule/export': 'CrawlerRuleController.export',
   'get /api/v1/crawler-rule': 'CrawlerRuleController.query',
   'get /api/v1/crawler-rule/:id': 'CrawlerRuleController.get',
+  'post /api/v1/crawler-rule/preview': 'CrawlerRuleController.preview',
   'post /api/v1/crawler-rule': 'CrawlerRuleController.create',
 
 
