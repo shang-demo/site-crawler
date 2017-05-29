@@ -27,6 +27,7 @@ function update() {
         })
         .then((data) => {
           lift.emit('update-success', data);
+          return null;
         })
         .catch((e) => {
           lift.emit('update-error', e);

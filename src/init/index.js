@@ -86,6 +86,7 @@ class My extends EventEmitter {
       })
       .then(() => {
         this.emit('lifted');
+        return null;
       })
       .catch((e) => {
         this.emit('error', e);

@@ -2,6 +2,7 @@ let siteRules = [];
 
 function lift(argStr) {
   logger.info('update-0.0.1 lift');
+  logger.info('argStr ', argStr);
 
   return Promise
     .try(() => {
@@ -40,7 +41,7 @@ function getSiteConfig(argStr) {
   logger.info('siteRules: ', siteRules);
 }
 
-function parseArgs(args) {
+function parseArgs(argStr) {
   let defaultConfig = {};
   _.forEach(siteRules, (item) => {
     defaultConfig[item.site] = {};
@@ -48,7 +49,7 @@ function parseArgs(args) {
 
   let config;
   try {
-    config = JSON.parse(args[0]);
+    config = JSON.parse(argStr);
   }
   catch (e) {
     logger.warn(e);
