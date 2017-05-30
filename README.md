@@ -12,6 +12,8 @@
 ## [site-parser-service](https://github.com/shang-demo/site-crawler/tree/site-parser-service)
 基于 [website-parser](https://github.com/shang-package/website-parser), 提供解析html服务
 
+## [site-crawler-eval](https://github.com/shang-demo/site-crawler/tree/site-crawler-eval)
+`eval`执行部分不安全代码, 主要用于[http://www.zdfans.com/](http://www.zdfans.com/)的`安全检查`(5秒后可访问网站)
 
 ## [backend](https://github.com/shang-demo/site-crawler/tree/backend) 
 **DEPRECATED** 使用老版 `gather-site` 实现的采集服务, 已经被[backend-v2](https://github.com/shang-demo/site-crawler/tree/backend-v2)代替
