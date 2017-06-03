@@ -261,6 +261,9 @@ const svc = {
     return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) < len;
   },
   tryParseJson(str) {
+    if (_.isObject(str)) {
+      return str;
+    }
     try {
       return JSON.parse(str);
     }

@@ -1,4 +1,18 @@
 const ctrl = {
+  async addOneRule(item) {
+    let body = await ctrl.transformBody(item);
+
+    return CrawlerRule
+      .findOneAndUpdate({
+        site: body.site
+      }, {
+        $set: body,
+      }, {
+        upsert: true,
+        new: true,
+      })
+      .lean();
+  },
   async transformBody(body) {
     if (body.requestOptions) {
       body.requestOptions = UtilService.tryParseJson(body.requestOptions);
@@ -13,7 +27,7 @@ const ctrl = {
       body.nextPageRequestOptions = UtilService.tryParseJson(body.nextPageRequestOptions);
     }
 
-    return body;
+    return _.omit(body, ['_id', 'createdAt', 'updatedAt', '__v']);
   },
   async query(ctx) {
     let conditions = {};
@@ -42,18 +56,7 @@ const ctrl = {
       });
   },
   async create(ctx) {
-    let body = await ctrl.transformBody(ctx.request.body);
-
-    return CrawlerRule
-      .findOneAndUpdate({
-        site: body.site
-      }, {
-        $set: body,
-      }, {
-        upsert: true,
-        new: true,
-      })
-      .lean()
+    return this.addOneRule(ctx.request.body)
       .then((data) => {
         ctx.body = data;
       })
@@ -67,6 +70,18 @@ const ctrl = {
           });
       });
   },
+  async preview(ctx) {
+    let body = await ctrl.transformBody(ctx.request.body);
+
+    return CrawlerService.crawler(body)
+      .then((result) => {
+        ctx.body = result;
+        return null;
+      })
+      .catch((e) => {
+        ctx.wrapError(e);
+      });
+  },
   async export(ctx) {
     let rules = await CrawlerRule.find({}).lean();
     let buffer = new Buffer(JSON.stringify(rules));
@@ -76,13 +91,18 @@ const ctrl = {
     });
     ctx.body = buffer;
   },
-  async preview(ctx) {
-    let body = await ctrl.transformBody(ctx.request.body);
+  async import(ctx) {
+    let arr = ctx.request.body;
 
-    return CrawlerService.crawler(body)
-      .then((result) => {
-        ctx.body = result;
-        return null;
+    return Promise
+      .map(arr, (item) => {
+        return ctrl.addOneRule(item);
+      })
+      .then(() => {
+        return CrawlerService.updateShowArticleSites();
+      })
+      .then(() => {
+        ctx.body = {};
       })
       .catch((e) => {
         ctx.wrapError(e);
