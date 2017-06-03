@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CrawlerRuleService } from '../crawler-rule/crawler-rule.service';
 import { CrawlerRule } from '../model/crawler-rule-model';
 import { MdSnackBar } from '@angular/material';
-import { Site } from '../model/site-model';
 import { SiteService } from '../site/site.service';
 
 @Component({
@@ -19,6 +18,9 @@ export class CrawlerRuleListComponent implements OnInit {
   public ngBusy = [];
 
   public serverUrl = 'SERVER_URL';
+
+  public ruleListImport: string;
+  public isShowImport: boolean = false;
 
   private busyTemplate = `<div class="ng-busy-default-spinner">
       <div class="bar1"></div>
@@ -75,6 +77,15 @@ export class CrawlerRuleListComponent implements OnInit {
       });
   }
 
+  public importRuleList() {
+    let obj = JSON.parse(this.ruleListImport);
+
+    this.crawlerRuleService.importRuleList(obj)
+      .subscribe(() => {
+        location.reload();
+      });
+  }
+
   private getRecords(crawlerRules) {
     crawlerRules.forEach((item) => {
       this.getRecord(item.site);
@@ -82,6 +93,10 @@ export class CrawlerRuleListComponent implements OnInit {
   }
 
   private getRecord(name) {
+    this.crawlerRules.forEach((rule) => {
+      rule.updatedAt = null;
+    });
+
     this.ngBusy[name] = {
       busy: this.siteService.crawlerRecord(name)
         .subscribe((result) => {

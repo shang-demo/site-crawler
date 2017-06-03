@@ -63,4 +63,15 @@ export class CrawlerRuleService {
         return r.json() as Site[];
       });
   }
+
+  public importRuleList(body: object): Observable<object> {
+    let url = this.serverUrl + '/api/v1/crawler-rule/import';
+    this.slimLoader.start();
+    return this.http
+      .post(url, body)
+      .map((r: Response) => {
+        this.slimLoader.complete();
+        return r.json() as object;
+      });
+  }
 }

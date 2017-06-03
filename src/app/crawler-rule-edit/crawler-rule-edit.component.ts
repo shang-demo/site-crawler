@@ -75,8 +75,15 @@ export class CrawlerRuleEditComponent implements OnInit {
     this.isShowImport = false;
     this.isShowExport = !this.isShowExport;
 
+    let omitKey = ['createdAt', 'updatedAt', '_id', '__v'];
+
     let rule = {};
     Object.keys(this.crawlerRule).forEach((key) => {
+      // 某些key不导出
+      if (omitKey.indexOf(key) > -1) {
+        return;
+      }
+
       try {
         if (typeof this.crawlerRule[key] === 'string') {
           rule[key] = JSON.parse(this.crawlerRule[key]);

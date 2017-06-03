@@ -10,9 +10,17 @@
   <a md-raised-button href="{{serverUrl}}/api/v1/crawler-rule/export" target="_blank">
     导出
   </a>
-  <!--<button md-raised-button>-->
-    <!--导入-->
-  <!--</button>-->
+  <a (click)="isShowImport=!isShowImport" md-raised-button>导入</a>
+  <md-grid-list cols="5" *ngIf="isShowImport">
+    <md-grid-tile colspan="4">
+      <md-input-container style="width: 100%">
+        <textarea rows="10" mdInput placeholder="JSON" [(ngModel)]="ruleListImport" #copyTarget></textarea>
+      </md-input-container>
+    </md-grid-tile>
+    <md-grid-tile colspan="1">
+      <a md-raised-button (click)="importRuleList()">确认导入</a>
+    </md-grid-tile>
+  </md-grid-list>
 
   <br>
   <br>
