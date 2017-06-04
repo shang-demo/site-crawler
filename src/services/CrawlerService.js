@@ -31,6 +31,27 @@ const svc = {
       })
       .map((article) => {
         return svc.addArticleGatherTag(article);
+      })
+      .then((articles) => {
+        if (articles && articles.length) {
+          return articles;
+        }
+        return Promise.reject(new Errors.NoArticleCrawler());
+      })
+      .catch((e) => {
+        logger.warn(e);
+
+        let mailOptions = {
+          subject: `采集出错 ${siteInfo.site} | ${e && e.message}`,
+          html: `<pre><code>${e.stack}</code></pre>`,
+        };
+
+        MailSendService.sendMail(mailOptions)
+          .catch((err) => {
+            logger.warn(err);
+          });
+
+        return [];
       });
   },
   async crawlerAndSave(siteInfo) {

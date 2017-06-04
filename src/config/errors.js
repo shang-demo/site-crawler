@@ -27,6 +27,8 @@ const errors = {
   ExecCmdParamError: { code: 200302, message: '参数错误, 请使用help命令查看如何使用' },
   // ArticleController
   NeedSite: { code: 200401, message: '需要site参数' },
+  // CrawlerService
+  NoArticleCrawler: { code: 200501, message: '没有找到匹配的内容' },
 };
 
 module.exports.errors = errors;
