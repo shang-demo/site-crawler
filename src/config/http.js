@@ -28,7 +28,11 @@ module.exports.http = {
       };
     },
     cors,
-    bodyParser,
+    () => {
+      return bodyParser({
+        jsonLimit: '100mb',
+      });
+    },
     function requestBodyLog() {
       if (!mKoa.config.log.requestBody) {
         return async (ctx, next) => {
