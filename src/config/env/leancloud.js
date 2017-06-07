@@ -44,4 +44,9 @@ module.exports = {
       json: true,
     },
   },
+  request: {
+    eval: {
+      host: 'http://site-crawler-eval.leanapp.cn',
+    },
+  },
 };

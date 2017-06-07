@@ -49,20 +49,19 @@ const svc = {
         return [null, null];
       });
   },
+  async evalCode(html, site) {
+    let result = await rp({
+      url: `${mKoa.config.request.eval.host}/api/v1/eval/${site}`,
+      json: true,
+      method: 'POST',
+      body: {
+        html,
+      },
+    });
+
+    return result.data;
+  },
   async crawlerZD(requestOptions, config = {}) {
-    function getUrl(html) {
-      /* eslint-disable no-eval */
-      let jschlVc = html.match(/name="jschl_vc" value="(\w+)"/)[1];
-      let pass = html.match(/name="pass" value="([^"]+)"/)[1];
-      let str1 = html.match(/var\s+s.*;/)[0];
-      let str2 = ';t=\'www.zdfans.com\';';
-      let str3 = html.match(/\s*;.*(?=';\s*121)/)[0] || '';
-      str3 = str3.replace(/a\.value\s*=/, 'var jschlAnswe=');
-
-      let jschlAnswe = eval(`(function(){${str1 + str2 + str3}; return jschlAnswe}())`);
-      return `http://www.zdfans.com/cdn-cgi/l/chk_jschl?jschl_vc=${encodeURIComponent(jschlVc)}&pass=${encodeURIComponent(pass)}&jschl_answer=${jschlAnswe}`;
-    }
-
     requestOptions.encoding = requestOptions.encoding || null;
     requestOptions.headers = requestOptions.headers || {};
     requestOptions.headers['User-Agent'] = requestOptions.headers['User-Agent'] ||
@@ -89,7 +88,7 @@ const svc = {
 
           return Promise
             .try(() => {
-              return getUrl(crawler.changeEncoding(response.body));
+              return svc.evalCode(crawler.changeEncoding(response.body), 'zd');
             })
             .delay(3000)
             .then((url) => {

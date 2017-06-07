@@ -44,4 +44,11 @@ module.exports = {
       json: true,
     },
   },
+  request: {
+    eval: {
+      host: 'http://127.0.0.1:40002',
+      url: 'http://127.0.0.1:40002/api/v1/eval',
+      json: true,
+    },
+  },
 };
