@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const escapeHtml = require('escape-html');
 const { transformResult } = require('./CrawlerResultTransformService');
 const { gatherTags } = require('./Constants');
 
@@ -10,26 +11,23 @@ const svc = {
   async crawler(siteInfo) {
     logger.info('start update site： ', siteInfo.site);
 
-    return rp(_.assign({
+    let crawlerData = await rp(_.assign({
       body: {
         requestOptions: siteInfo.requestOptions,
         config: {
           site: siteInfo.site,
         },
       },
-    }, mKoa.config.request.crawler))
-      .then((data) => {
-        return rp(_.assign({
-          body: {
-            html: data.html,
-            sitemap: siteInfo.sitemap,
-          }
-        }, mKoa.config.request.parser));
-      })
-      .then((data) => {
-        return transformResult(data, siteInfo.transform);
-      })
-      .map((article) => {
+    }, mKoa.config.request.crawler));
+    let parserData = await rp(_.assign({
+      body: {
+        html: crawlerData.html, sitemap: siteInfo.sitemap,
+      }
+    }, mKoa.config.request.parser));
+    let transformData = await transformResult(parserData, siteInfo.transform);
+
+    return Promise
+      .map(transformData, (article) => {
         return svc.addArticleGatherTag(article);
       })
       .then((articles) => {
@@ -43,7 +41,11 @@ const svc = {
 
         let mailOptions = {
           subject: `采集出错 ${siteInfo.site} | ${e && e.message}`,
-          html: `<pre><code>${e.stack}</code></pre>`,
+          html: `<pre>
+                  <code>${JSON.stringify(parserData, null, 2)}</code>
+                  <code>${e.stack}</code>
+                  <code>${escapeHtml(crawlerData.html)}</code>
+                </pre>`,
         };
 
         MailSendService.sendMail(mailOptions)
@@ -51,7 +53,7 @@ const svc = {
             logger.warn(err);
           });
 
-        return [];
+        return Promise.reject(e);
       });
   },
   async crawlerAndSave(siteInfo) {
