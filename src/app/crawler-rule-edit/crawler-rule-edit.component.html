@@ -1,4 +1,8 @@
 <div class="container">
+  <button md-raised-button [routerLink]=" ['/rule-list'] "
+          routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    返回
+  </button>
   <a (click)="isShowImport=!isShowImport; isShowExport=false;" md-raised-button>导入</a>
   <a (click)="exportCrawlerRule()" md-raised-button>导出</a>
   <md-grid-list cols="5" *ngIf="isShowImport || isShowExport">
@@ -69,7 +73,7 @@
     <button md-raised-button type="submit">保存</button>
 
     <a (click)="preview()" md-raised-button>预览</a>
-
+    <a *ngIf="crawlerRule._id" (click)="remove(crawlerRule._id)" md-raised-button>删除</a>
 
   </form>
 

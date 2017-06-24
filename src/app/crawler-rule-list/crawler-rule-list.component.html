@@ -42,7 +42,7 @@
       <td scope="row">
         <button md-raised-button [routerLink]=" ['/rule-detail', rule.id] "
                 routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          {{rule.site}}
+          {{rule.site || '-'}}
         </button>
       </td>
       <td>

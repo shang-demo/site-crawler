@@ -119,4 +119,11 @@ export class CrawlerRuleEditComponent implements OnInit {
         });
       });
   }
+
+  public remove(id) {
+    this.crawlerRuleService.remove(id)
+      .subscribe(() => {
+        this.router.navigateByUrl('/rule-list');
+      });
+  }
 }

@@ -64,6 +64,17 @@ export class CrawlerRuleService {
       });
   }
 
+  public remove(id: string): Observable<object> {
+    let url = this.serverUrl + '/api/v1/crawler-rule/' + id;
+    this.slimLoader.start();
+    return this.http
+      .delete(url)
+      .map((r: Response) => {
+        this.slimLoader.complete();
+        return r.json() as object;
+      });
+  }
+
   public importRuleList(body: object): Observable<object> {
     let url = this.serverUrl + '/api/v1/crawler-rule/import';
     this.slimLoader.start();
