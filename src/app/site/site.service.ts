@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable, Subject } from 'rxjs';
 import { Site } from '../model/site-model';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
+import { CrawlerRuleService } from '../crawler-rule/crawler-rule.service';
 
 @Injectable()
 export class SiteService {
@@ -24,6 +25,7 @@ export class SiteService {
   private searchSubject = new Subject<string>();
 
   constructor(private http: Http,
+              private crawlerRuleService: CrawlerRuleService,
               private slimLoader: SlimLoadingBarService) {
     this.searchSubject
       .distinctUntilChanged()
@@ -88,10 +90,24 @@ export class SiteService {
       });
   }
 
-  private querySite(params: object = {}): Observable<Site []> {
+  private querySite(params: any = {}): Observable<Site []> {
     let queryStr = this.serverUrl + '/api/v1/article?';
+
+    params.sites = this.crawlerRuleService.LOCALE_RULES
+      .filter((item) => {
+        return item.isShowArticle;
+      })
+      .map((item) => {
+        return item.site;
+      });
+
     queryStr += Object.keys(params)
       .map((key) => {
+        if (({}).toString.call(params[key]) === '[object Array]') {
+          return params[key].map((item) => {
+            return `${key}=${item || ''}`;
+          }).join('&');
+        }
         return `${key}=${params[key] || ''}`;
       })
       .join('&');

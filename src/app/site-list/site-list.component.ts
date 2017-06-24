@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Site } from '../model/site-model';
 import { SiteService } from '../site/site.service';
 import { MdSnackBar } from '@angular/material';
+import { CrawlerRuleService } from '../crawler-rule/crawler-rule.service';
 
 @Component({
   // The selector is what angular internally uses
@@ -24,6 +25,7 @@ export class SiteListComponent implements OnInit, OnDestroy {
   private searchItemsSubscription;
 
   constructor(private siteService: SiteService,
+              private crawlerRuleService: CrawlerRuleService,
               private snackBar: MdSnackBar) {
   }
 
@@ -38,6 +40,8 @@ export class SiteListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.updateSiteFilter();
+
     this.searchItemsSubscription = this.siteService.searchItems
       .subscribe((sites) => {
         if (!sites) {
@@ -57,5 +61,25 @@ export class SiteListComponent implements OnInit, OnDestroy {
 
   public onScrollDown() {
     this.siteService.scrollDown();
+  }
+
+  public updateSiteFilter() {
+    this.crawlerRuleService.query()
+      .subscribe((remoteRules) => {
+        let localRules = [];
+
+        try {
+          localRules = JSON.parse(localStorage.getItem('localRules')) || [];
+        } catch (e) {
+          console.warn(e);
+        }
+
+        this.crawlerRuleService.mergeRules(remoteRules, localRules);
+      }, (e) => {
+        console.warn(e);
+        this.snackBar.open('获取服务器配合出错了~', 'ok', {
+          duration: 5000,
+        });
+      });
   }
 }

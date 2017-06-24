@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SiteService } from '../site/site.service';
-import { MdDialog, MdSnackBar } from '@angular/material';
-import { SiteSettingComponent } from '../site-setting/site-setting.component';
+import { MdSnackBar } from '@angular/material';
+import { CrawlerRule } from '../model/crawler-rule-model';
+import { CrawlerRuleService } from '../crawler-rule/crawler-rule.service';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   // The selector is what angular internally uses
@@ -19,16 +21,28 @@ import { SiteSettingComponent } from '../site-setting/site-setting.component';
 export class HomeComponent implements OnInit {
 
   public updateTime: string;
+  public localRules: CrawlerRule[];
+  private ruleSubject = new Subject<string>();
 
   constructor(private siteService: SiteService,
-              private snackBar: MdSnackBar,
-              private dialog: MdDialog) {
+              private crawlerRuleService: CrawlerRuleService,
+              private snackBar: MdSnackBar) {
   }
 
   public ngOnInit(): void {
+    this.localRules = this.crawlerRuleService.LOCALE_RULES;
+
     this.siteService.getSiteUpdateTime()
       .subscribe((data) => {
         this.updateTime = data.updateTime;
+      });
+
+    this.ruleSubject
+      .debounceTime(10)
+      .subscribe(() => {
+        console.info('saveRules');
+        this.crawlerRuleService.saveRules();
+        this.reload();
       });
   }
 
@@ -56,12 +70,9 @@ export class HomeComponent implements OnInit {
     this.siteService.scrollDown(true);
   }
 
-  public openDialog() {
-    let dialogRef = this.dialog.open(SiteSettingComponent);
-    dialogRef.afterClosed()
-      .subscribe((result) => {
-        console.info(result);
-      });
+  public toggle() {
+    console.info('toggle');
+    this.ruleSubject.next('toggle');
   }
 
 }

@@ -18,6 +18,11 @@
         <md-input-container class="search">
           <input mdInput placeholder="搜索内容" #searchBox (keyup)="search(searchBox.value)">
         </md-input-container>
+
+        <md-checkbox class="crawler-rule" *ngFor="let rule of localRules" [(ngModel)]="rule.isShowArticle" (change)="toggle()" >
+          {{rule.site}}
+        </md-checkbox>
+
       </div>
       <div class="right">
         <button md-button (click)="forceUpdate()">
