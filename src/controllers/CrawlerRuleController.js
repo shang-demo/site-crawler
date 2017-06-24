@@ -108,6 +108,19 @@ const ctrl = {
         ctx.wrapError(e);
       });
   },
+  async remove(ctx) {
+    let id = ctx.params.id;
+    return CrawlerRule
+      .remove({
+        _id: id
+      })
+      .then(() => {
+        ctx.body = {};
+      })
+      .catch((e) => {
+        ctx.wrapError(e);
+      });
+  }
 };
 
 module.exports = ctrl;

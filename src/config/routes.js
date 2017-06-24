@@ -43,7 +43,7 @@ module.exports.routes = {
   'post /api/v1/crawler-rule/import': 'CrawlerRuleController.import',
   'post /api/v1/crawler-rule/preview': 'CrawlerRuleController.preview',
   'post /api/v1/crawler-rule': 'CrawlerRuleController.create',
-
+  'delete /api/v1/crawler-rule/:id': 'CrawlerRuleController.remove',
 
   // version
   '/': 'ExecuteCmdController.deployVersion',
