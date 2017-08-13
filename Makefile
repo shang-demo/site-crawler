@@ -27,7 +27,8 @@ deploy:
 	@ sh config/push.sh deploy $(e)
 copy:
 	@ sh config/copy.sh $(d)
-rsync:
+rsyncAli:
+	gulp buildServer
 	cp ./package.json ./production
-	gsed -i 's/"start": ".*/"start": "PORT=4001 NODE_ENV=production pm2 start .\/index.js --name site-craler-service:1337",/g' ./production/package.json
-	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/  nodeadmin@112.74.107.82:/home/nodeadmin/js-production/site-craler-service
+	gsed -i 's/"start": ".*/"start": "PORT=4001 NODE_ENV=production pm2 start .\/index.js --name site-craler-service:4001",/g' ./production/package.json
+	rsync --exclude .DS_Store --exclude .tmp --exclude .idea --exclude .git --exclude node_modules -crzvF -e "ssh -p 22" ./production/  root@112.74.107.82:/root/production/site-craler-service
