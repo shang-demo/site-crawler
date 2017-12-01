@@ -1,6 +1,6 @@
-const MONGODB_DATABASE = 'production';
-const MONGODB_USERNAME = 'productionUser';
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
+const MONGODB_DATABASE = 'noName';
+const MONGODB_USERNAME = 'noNameUser';
+const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD || '';
 
 module.exports = {
   log: {
@@ -21,19 +21,22 @@ module.exports = {
       database: MONGODB_DATABASE,
     },
   },
-  port: process.env.PORT || 8080,
+  port: process.env.PORT || 3000,
+  graphql: {
+    graphiql: true,
+  },
   ip: undefined,
   bootstrap: [],
   proxiesCache: {
     ttl: 3600,
     requestOptions: {
-      url: 'https://proxy-crawler.leanapp.cn/api/v1/proxy?limit=3',
+      url: 'https://proxy-crawler.now.sh/api/v1/proxy?limit=3',
       json: true,
     },
   },
   request: {
     eval: {
-      host: 'http://site-crawler-eval.leanapp.cn',
+      host: 'http://site-crawler-eval.now.sh',
     },
   },
 };
