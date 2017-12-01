@@ -1,5 +1,5 @@
 {
-  "name": "site-crawler",
+  "name": "site-crawler-backend",
   "version": "0.1.0",
   "main": "src/index.js",
   "author": "xinshangshangxin <xinshangshangxin@gmail.com>",

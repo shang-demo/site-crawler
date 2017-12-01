@@ -21,14 +21,17 @@ module.exports = {
       database: MONGODB_DATABASE,
     },
   },
-  port: process.env.LEANCLOUD_APP_PORT || 8080,
+  port: process.env.PORT || 3000,
+  graphql: {
+    graphiql: true,
+  },
   ip: undefined,
   bootstrap: [
     'CrawlerService',
   ],
   request: {
     parser: {
-      url: 'http://site-parser-service.leanapp.cn/api/v1/parser',
+      url: 'http://site-parser-service.now.sh/api/v1/parser',
       json: true,
       method: 'POST',
     },

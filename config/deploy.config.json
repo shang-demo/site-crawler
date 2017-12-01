@@ -4,7 +4,7 @@
     "remote": "origin",
     "branch": "backend-v2"
   },
-  "deploy": {
+  "prod": {
     "url": "git@gitlab.com:demoshang/server-projects.git",
     "remote": "prod",
     "branch": "__package_name__"
