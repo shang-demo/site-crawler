@@ -8,6 +8,6 @@ module.exports = {
       ],
       database: 'noName',
     },
-  bootstrap: [],
+    bootstrap: [],
   },
 };
