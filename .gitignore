@@ -58,3 +58,5 @@ production/
 static/
 deploy/
 package-lock.json
+config/script-tools/private-*
+!config/script-tools/private-env.default.sh
