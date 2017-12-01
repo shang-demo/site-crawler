@@ -56,7 +56,7 @@ function lift() {
     }
 
     let actionMethodName = actionParts[1];
-    let actionMethod = controller[actionMethodName];
+    let actionMethod = controller[actionMethodName].bind(controller);
 
     if (!actionMethod) {
       throw new Error(`undefined action method: ${action}`);
@@ -77,7 +77,10 @@ function lift() {
 
   server.listen(port, host);
   server.on('error', onError);
-  server.on('listening', onListening);
+  server.on('listening', () => {
+    onListening();
+    this.emit('listening');
+  });
 
   function onError(error) {
     if (error.syscall !== 'listen') {

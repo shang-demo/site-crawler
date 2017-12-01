@@ -20,6 +20,9 @@ function lift() {
       return _.merge(this.config, require(file.path));
     })
     .then(() => {
+      let baseEnvPath = path.join(this.config.paths.envConfig, 'base');
+      _.merge(this.config, require(baseEnvPath));
+
       let envPath = path.join(this.config.paths.envConfig, this.environment);
       _.merge(this.config, require(envPath));
     })
