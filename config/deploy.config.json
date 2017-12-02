@@ -2,7 +2,7 @@
   "dev": {
     "url": "git@github.com:shang-demo/site-crawler.git",
     "remote": "origin",
-    "branch": "backend-v2"
+    "branch": "site-crawler-service"
   },
   "prod": {
     "url": "git@gitlab.com:demoshang/server-projects.git",
