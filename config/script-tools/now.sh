@@ -124,6 +124,9 @@ then
 elif [ "$1" = "build" ]
 then
   build
+elif [ "$1" = "deploy" ]
+then
+  deploy
 elif [ "$1" = "logs" ]
 then
   logs
