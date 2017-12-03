@@ -82,8 +82,18 @@ function logs() {
   local deployments=$(getDeployments)
   local firstUid=$( echo ${deployments} | jq -r '. | first | .uid' )
 
-  echo "now -t ${nowToken} logs ${firstUid} -f"
-  now -t ${nowToken} logs ${firstUid} -f
+  local logsConfig="${firstUid} -f"
+  local isNu=$(isNumber $1)
+
+  if [ -n "$1" ] && [ ${isNu:-0} -eq 1 ]
+  then
+    logsConfig="${logsConfig} -n $1"
+  else
+    logsConfig="${logsConfig} $*"
+  fi
+
+  echo "now -t ${nowToken} logs ${logsConfig}"
+  now -t ${nowToken} logs ${logsConfig}
 }
 
 function getFirstDeployment() {
@@ -121,12 +131,18 @@ then
   deleteOldVersion
   build
   deploy
+  alias
+  getProjectAlias
 elif [ "$1" = "build" ]
 then
   build
+elif [ "$1" = "deploy" ]
+then
+  deploy
 elif [ "$1" = "logs" ]
 then
-  logs
+  argv=( "$@" )
+  logs ${argv[@]:1}
 elif [ "$1" = "remove" ]
 then
   deleteOldVersion
