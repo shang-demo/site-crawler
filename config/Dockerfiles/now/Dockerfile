@@ -4,7 +4,7 @@ WORKDIR /app
 
 # cache npm install
 COPY package.json /app
-RUN npm install && npm i -g pm2
+RUN npm install
 
 # copy project
 ADD . /app
