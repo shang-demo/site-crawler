@@ -51,7 +51,8 @@ function deleteOldVersion() {
 
   local deleteUidList=$( echo $( echo ${deployments} | jq ".[] | select(.uid != ${maintainUid}) | .uid" ) )
 
-  echo "deleteUidList: "${deleteUidList}
+  echo "deleteUidList: ${deleteUidList}"
+  echo ""
 
   declare -a arr=(${deleteUidList})
 
@@ -75,7 +76,7 @@ function deploy() {
   resetDir
   cd production
   echo "now -t ${nowToken} -n ${projectName} --public ${nowAppend}"
-  now -t ${nowToken} -n ${projectName} --public ${nowAppend}
+  now -t ${nowToken} -n ${projectName} --public -C ${nowAppend}
 }
 
 function logs() {
