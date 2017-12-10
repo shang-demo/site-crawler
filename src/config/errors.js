@@ -29,6 +29,9 @@ const errors = {
   NeedSite: { code: 200401, message: '需要site参数' },
   // CrawlerService
   NoArticleCrawler: { code: 200501, message: '没有找到匹配的内容' },
+  NoNextPageRequestOptions: { code: 200502, message: '没有下一页请求配置' },
+  NoNextPage: { code: 200503, message: '没有下一页内容' },
+  RetryOverLimit: { code: 200504, message: '重试超过次数' },
 };
 
 module.exports.errors = errors;

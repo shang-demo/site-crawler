@@ -34,6 +34,10 @@ const svc = {
       });
     }
 
+    if (dateStr && fmt.length >= dateStr.length) {
+      dateStr = `1970${dateStr}`;
+    }
+
     return moment(dateStr, fmt);
   },
   offsetChinese(dateStr) {

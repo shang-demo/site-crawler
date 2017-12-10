@@ -1,6 +1,8 @@
+const promiseRetry = require('promise-retry');
+
 let siteRules = [];
 
-function lift(argStr) {
+function lift(mKoa, argStr) {
   logger.info('update-0.0.1 lift');
   logger.info('argStr ', argStr);
 
@@ -17,7 +19,22 @@ function lift(argStr) {
       return getSiteConfig(argStr);
     })
     .then(() => {
-      return captureAll();
+      return Promise
+        .map(siteRules, (rule) => {
+          return Promise.resolve()
+            .then(() => {
+              return captureSite(rule);
+            })
+            .reflect();
+        })
+        .each((inspection) => {
+          if (inspection.isFulfilled()) {
+            logger.info('A promise in the array was fulfilled with', inspection.value());
+          }
+          else {
+            logger.error('A promise in the array was rejected with', inspection.reason());
+          }
+        });
     });
 }
 
@@ -37,14 +54,20 @@ function getSiteConfig(argStr) {
 
     item.isUpdate = true;
     item.isErr = false;
+
+    // special for site ZD
+    if (item.site === 'zd' && _.get(item, 'transform.date')) {
+      item.transform.date.param = 'YYYYMMDD';
+    }
   });
+
   logger.info('siteRules: ', siteRules);
 }
 
 function parseArgs(argStr) {
   let defaultConfig = {};
   _.forEach(siteRules, (item) => {
-    defaultConfig[item.site] = {};
+    defaultConfig[item.site] = { disabled: true };
   });
 
   let config;
@@ -58,6 +81,7 @@ function parseArgs(argStr) {
   if (_.isObject(config)) {
     _.assign(defaultConfig, config);
   }
+
   return defaultConfig;
 }
 
@@ -75,47 +99,43 @@ function replace(obj, map) {
   }
 }
 
-// 采集所有页面
-function captureAll() {
-  siteRules.forEach((item) => {
-    if (item.nextPageRequestOptions && item.curPage > 1) {
-      item.requestOptions = replace(item.nextPageRequestOptions, item);
+function captureSite(siteInfo, deferred = UtilService.defer()) {
+  if (siteInfo.curPage > 1) {
+    if (!siteInfo.nextPageRequestOptions) {
+      return deferred.reject(new Errors.NoNextPageRequestOptions());
     }
-  });
 
-  return Promise
-    .all(siteRules.map((item) => {
-      logger.info('item.requestOptions: ', item.requestOptions);
-      return CrawlerService.crawlerAndSave(item)
-        .catch((e) => {
-          logger.warn(e);
-          return {
-            record: {},
-          };
-        });
-    }))
-    .then((data) => {
-      _.forEachRight(data, (siteResult, i) => {
-        if (!siteResult.record.total || siteResult.record.updateFailed) {
-          // eslint-disable-next-line no-plusplus
-          siteRules[i].canErrNu--;
-          logger.warn('siteResult: ', siteResult);
-        }
-        else {
-          logger.info('site success: ', siteResult.site, siteRules[i].curPage);
-          siteRules[i].canErrNu = 3;
-          // eslint-disable-next-line no-plusplus
-          siteRules[i].curPage++;
-        }
+    siteInfo.requestOptions = replace(siteInfo.nextPageRequestOptions, siteInfo);
+  }
 
-        if (siteRules[i].canErrNu < 0) {
-          siteRules.splice(i, 1);
-        }
-      });
-    })
+  promiseRetry(
+    (retry, nu) => {
+      if (nu > 1) {
+        logger.info(`retry ${nu} for ${siteInfo.site} at ${siteInfo.curPage} page `);
+      }
+
+      return CrawlerService.crawlerAndSave(siteInfo)
+        .then((siteResult) => {
+          if (!siteResult.record.total || siteResult.record.updateFailed) {
+            return Promise.reject(new Errors.NoArticleCrawler());
+          }
+
+          logger.info('site success: ', siteResult.site, siteInfo.curPage);
+          return null;
+        })
+        .catch(retry);
+    }, { retries: 1, factor: 1 })
     .then(() => {
-      return captureAll();
+      siteInfo.curPage += 1;
+      return captureSite(siteInfo, deferred);
+    })
+    .catch((e) => {
+      logger.warn(e);
+      logger.warn('site error: ', siteInfo.site, siteInfo.curPage);
+      deferred.reject(e);
     });
+
+  return deferred.promise;
 }
 
 

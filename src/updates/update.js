@@ -23,7 +23,7 @@ function update() {
         .try(() => {
           /* eslint-disable global-require */
           /* eslint-disable import/no-dynamic-require */
-          return require(`./${updateFile}`)(argStr);
+          return require(`./${updateFile}`)(lift, argStr);
         })
         .then((data) => {
           lift.emit('update-success', data);
