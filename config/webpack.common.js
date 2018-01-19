@@ -31,8 +31,9 @@ const METADATA = {
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
   SERVER_URL: {
-    default: 'http://localhost:1337',
-    prod: '//site-crawler.leanapp.cn'
+    default: 'https://site-crawler-backend.now.sh',
+    // default: 'http://127.0.0.1:1337',
+    prod: 'https://site-crawler-backend.now.sh'
   },
 };
 
@@ -296,7 +297,15 @@ module.exports = function (options) {
         title: METADATA.title,
         chunksSortMode: 'dependency',
         metadata: METADATA,
-        inject: 'head'
+        inject: 'head',
+        minify: isProd ? {
+          removeAttributeQuotes: true,
+          collapseWhitespace: true,
+          html5: true,
+          minifyCSS: true,
+          removeComments: true,
+          removeEmptyAttributes: true,
+        } : false,
       }),
 
       /*
