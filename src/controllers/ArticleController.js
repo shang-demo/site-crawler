@@ -1,8 +1,3 @@
-const { minUpdateLen } = Constants;
-
-// 服务器最新采集时间
-let updateTime = 0;
-
 const ctrl = {
   async query(ctx) {
     let conditions = {
@@ -42,17 +37,30 @@ const ctrl = {
       });
   },
   async taskUpdate(ctx) {
-    if (new Date().getTime() - new Date(updateTime).getTime() < minUpdateLen) {
-      logger.info('last update in 2 min');
-      ctx.body = { start: false };
-      return;
+
+    if (!ctx.query.wait) {
+      ctx.body = { start: true };
+
+      Promise
+        .try(() => {
+          return CrawlerRule.find({}).lean();
+        })
+        .map((site) => {
+          return CrawlerService.crawlerAndSave(site)
+            .catch((e) => {
+              logger.warn(site.site);
+              logger.warn(e);
+            });
+        })
+        .catch((e) => {
+          logger.warn(e);
+        });
+
+      return null;
     }
 
-    updateTime = new Date();
-    ctx.body = { start: true };
-
     // not wait return
-    Promise
+    return Promise
       .try(() => {
         return CrawlerRule.find({}).lean();
       })
@@ -63,8 +71,18 @@ const ctrl = {
             logger.warn(e);
           });
       })
+      .then((data) => {
+        ctx.body = {
+          start: true,
+          data: data,
+        };
+      })
       .catch((e) => {
         logger.warn(e);
+        ctx.body = {
+          start: false,
+          data: e,
+        };
       });
   },
   async crawlerRecord(ctx) {
@@ -92,9 +110,20 @@ const ctrl = {
       });
   },
   async getUpdateTime(ctx) {
-    ctx.body = {
-      updateTime,
-    };
+    return CrawlerLog.findOne()
+      .sort({ createdAt: -1 })
+      .lean()
+      .then((result) => {
+        ctx.body = {
+          updateTime: result.createdAt,
+        };
+      })
+      .catch((e) => {
+        logger.warn(e);
+        ctx.body = {
+          updateTime: 0,
+        };
+      });
   },
 };
 
