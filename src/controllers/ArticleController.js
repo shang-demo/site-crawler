@@ -37,7 +37,6 @@ const ctrl = {
       });
   },
   async taskUpdate(ctx) {
-
     if (!ctx.query.wait) {
       ctx.body = { start: true };
 
@@ -74,7 +73,7 @@ const ctrl = {
       .then((data) => {
         ctx.body = {
           start: true,
-          data: data,
+          data,
         };
       })
       .catch((e) => {
