@@ -6,6 +6,19 @@ const svc = {
     formatDate(item, key, fmt) {
       return TimerParserService.calculateTime(item[key], fmt);
     },
+    replace(item, key, regexStr, token) {
+      console.log(item, key, regexStr, token);
+      let regParts = regexStr.match(/^\/(.*?)\/(\w*)$/);
+      let regexp;
+      if (regParts) {
+        regexp = new RegExp(regParts[1], regParts[2]);
+      }
+      else {
+        regexp = new RegExp(regexStr);
+      }
+
+      return item[key].replace(regexp, token);
+    },
     setFieldValue(item, key, field) {
       return item[field];
     },
