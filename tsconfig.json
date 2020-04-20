@@ -1,0 +1,28 @@
+{
+  "include": ["index.ts", "src/**/*.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "target": "ES2018",
+    "module": "CommonJS",
+    "allowJs": false,
+    "checkJs": false,
+    "sourceMap": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "importHelpers": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
