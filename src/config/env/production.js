@@ -35,5 +35,8 @@ module.exports = {
     eval: {
       host: 'http://site-crawler-eval.leanapp.cn',
     },
+    headless: {
+      url: 'http://headless.xinshangshangxin.com/'
+    },
   },
 };

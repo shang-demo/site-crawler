@@ -2,25 +2,36 @@ const cacheManager = require('cache-manager');
 const crawler = require('website-crawler');
 const rp = require('request-promise');
 
-const request = crawler.request;
-const RetryStrategy = crawler.RetryStrategy;
-
 const memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: mKoa.config.proxiesCache.ttl });
 
 const svc = {
-  zdRequestOptions: null,
-  zdJar: request.jar(),
-  getZdRequestOptions() {
-    svc.zdRequestOptions.jar = svc.zdJar;
-    return _.assign({}, svc.zdRequestOptions);
-  },
   async crawler(requestOptions, config = {}) {
-    if (!config.proxies) {
-      config.proxies = await this.getProxies();
-    }
+    // if (!config.proxies) {
+    //   config.proxies = await this.getProxies();
+    // }
 
-    if (config.site === 'zd') {
-      return svc.crawlerZD(requestOptions, config);
+    if (requestOptions.mode === 'headless') {
+      const code = `
+const browser = await puppeteer.connect();
+const page = await browser.newPage();
+await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2'});
+const result = await page.content();
+await browser.close();
+return result;
+      `;
+      logger.info(code);
+      // eslint-disable-next-line no-param-reassign
+      requestOptions = {
+        method: 'POST',
+        url: mKoa.config.request.headless.url,
+        body: {
+          code,
+        },
+        json: true,
+      };
+
+      const result = await rp(requestOptions);
+      return result.data;
     }
 
     return crawler(requestOptions, config);
@@ -47,72 +58,6 @@ const svc = {
       .catch((e) => {
         logger.warn(e);
         return [null, null];
-      });
-  },
-  async evalCode(html, site) {
-    let result = await rp({
-      url: `${mKoa.config.request.eval.host}/api/v1/eval/${site}`,
-      json: true,
-      method: 'POST',
-      body: {
-        html,
-      },
-    });
-
-    return result.data;
-  },
-  async crawlerZD(requestOptions, config = {}) {
-    requestOptions.encoding = requestOptions.encoding || null;
-    requestOptions.headers = requestOptions.headers || {};
-    requestOptions.headers['User-Agent'] = requestOptions.headers['User-Agent'] ||
-      {
-        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729)',
-      };
-
-    requestOptions.jar = svc.zdJar;
-    let originUrl = requestOptions.url;
-    let newUrl;
-
-    logger.info('svc.zdJar.getCookieString(originUrl): ', svc.zdJar.getCookieString(originUrl));
-
-
-    return crawler(requestOptions,
-      {
-        disableEncodingCheck: true,
-        proxies: config.proxies,
-        requestRetryStrategy(err, response) {
-          logger.info('response.statusCode1: ', response.statusCode);
-          if (!response || response.statusCode < 400) {
-            return RetryStrategy.all(err, response);
-          }
-
-          return Promise
-            .try(() => {
-              return svc.evalCode(crawler.changeEncoding(response.body), 'zd');
-            })
-            .delay(3000)
-            .then((url) => {
-              requestOptions.url = url;
-              newUrl = url;
-              svc.zdRequestOptions = requestOptions;
-
-              return crawler(requestOptions, {
-                disableChangeEncoding: true,
-                disableTransformRequestOptions: true,
-                resolveWithFullResponse: true,
-              }, {
-                retries: 0,
-              });
-            })
-            .spread((body, res) => {
-              logger.info('response.statusCode2: ', res.statusCode);
-              svc.zdJar.setCookie(svc.zdJar.getCookieString(newUrl), originUrl);
-              return body;
-            })
-            .catch((e) => {
-              logger.warn(e);
-            });
-        },
       });
   },
 };

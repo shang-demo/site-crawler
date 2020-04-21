@@ -42,4 +42,4 @@ rsyncAli:
 	gulp buildServer
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=4001 NODE_ENV=production pm2 start .\/index.js --name site-craler-service:4001",/g' ./production/package.json
-	rsync --exclude .DS_Store --exclude .tmp --exclude .idea --exclude .git --exclude node_modules -crzvF -e "ssh -p 22" ./production/  root@112.74.107.82:/root/production/site-craler-service
+	rsync --exclude .DS_Store --exclude .tmp --exclude .idea --exclude .git --exclude node_modules -crzvF -e "ssh -p 22" ./production/  root@114.67.70.208:/root/production/site-craler-service

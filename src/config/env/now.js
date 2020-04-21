@@ -28,7 +28,7 @@ module.exports = {
   ip: undefined,
   bootstrap: [],
   proxiesCache: {
-    ttl: 3600,
+    ttl: 1,
     requestOptions: {
       url: 'https://proxy-crawler.now.sh/api/v1/proxy?limit=3',
       json: true,
