@@ -1,5 +1,5 @@
 {
-  "name": "site-crawler-backend",
+  "name": "site-crawler-backend-now",
   "version": "0.1.0",
   "main": "src/index.js",
   "author": "xinshangshangxin <xinshangshangxin@gmail.com>",
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "gulp",
+    "build": "bash config/script-tools/now.sh build",
     "lint": "./node_modules/.bin/eslint --fix src/",
     "test": "ava -v -s test/",
     "typings": "node config/generate-typings init"
@@ -18,6 +19,7 @@
     "chalk": "^2.0.1",
     "escape-html": "^1.0.3",
     "fast-json-parse": "^1.0.2",
+    "fs-extra": "^8.1.0",
     "iconv-lite": "^0.4.15",
     "jwt-simple": "^0.5.1",
     "kcors": "^2.2.1",
@@ -43,7 +45,7 @@
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.0",
     "eslint-plugin-import": "^2.7.0",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "^4.0.0",
     "gulp-cached": "^1.1.1",
     "gulp-eslint": "^4.0.0",
     "gulp-filter": "^5.0.0",

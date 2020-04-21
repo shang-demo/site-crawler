@@ -1,13 +1,14 @@
-FROM node:8.9
+FROM node:8.9-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache git
 # cache npm install
-COPY package.json /app
-RUN npm install
+COPY package.json .
+RUN npm install --production
 
 # copy project
-ADD . /app
+ADD . .
 
 EXPOSE 3000
 

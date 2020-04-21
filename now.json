@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "site-crawler-backend",
+  "builds": [
+    {
+      "src": "production/index.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "production/index.js"
+    }
+  ],
+  "env": {
+    "MONGO_URL": "@mongourl"
+  }
+}

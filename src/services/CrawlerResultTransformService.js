@@ -7,7 +7,7 @@ const svc = {
       return TimerParserService.calculateTime(item[key], fmt);
     },
     replace(item, key, regexStr, token) {
-      console.log(item, key, regexStr, token);
+      logger.log(item, key, regexStr, token);
       let regParts = regexStr.match(/^\/(.*?)\/(\w*)$/);
       let regexp;
       if (regParts) {

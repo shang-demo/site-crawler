@@ -2,6 +2,7 @@ const _ = require('lodash');
 const EventEmitter = require('events');
 const path = require('path');
 const Promise = require('bluebird');
+const Koa = require('koa');
 
 const symbolLift = Symbol('_lift');
 const SymbolCheckMiddleware = Symbol('_checkMiddleware');
@@ -14,6 +15,18 @@ class My extends EventEmitter {
     this.middlewares = [];
 
     this.init();
+
+    if (options.now) {
+      const app = new Koa();
+      const port = 3000;
+
+      app.listen(port, (err) => {
+        if (err) throw err;
+        console.log(`> Ready on server http://localhost:${port}`);
+      });
+
+      this.app = app;
+    }
   }
 
   init() {

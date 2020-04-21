@@ -14,7 +14,11 @@ module.exports = {
       password: MONGODB_PASSWORD,
       hosts: [
         {
-          host: '112.74.107.82',
+          host: 'us.mongodb.xinshangshangxin.com',
+          port: 13508,
+        },
+        {
+          host: 'zh.mongodb.xinshangshangxin.com',
           port: 13508,
         }
       ],

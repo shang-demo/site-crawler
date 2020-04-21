@@ -1,6 +1,4 @@
-const MONGODB_DATABASE = 'production';
-const MONGODB_USERNAME = 'productionUser';
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
+const MONGO_URL = process.env.MONGO_URL;
 
 module.exports = {
   log: {
@@ -10,18 +8,28 @@ module.exports = {
   },
   connections: {
     defaultMongo: {
-      username: MONGODB_USERNAME,
-      password: MONGODB_PASSWORD,
-      hosts: [
-        {
-          host: '112.74.107.82',
-          port: 13508,
-        }
-      ],
-      database: MONGODB_DATABASE,
+      type: 'uri',
+      uri: MONGO_URL
     },
   },
-  port: process.env.PORT || 8080,
+  port: process.env.PORT || 3000,
+  graphql: {
+    graphiql: true,
+  },
   ip: undefined,
-  bootstrap: [],
+  bootstrap: [
+    'CrawlerService',
+  ],
+  request: {
+    parser: {
+      url: 'https://site-parser-service.now.sh/api/v1/parser',
+      json: true,
+      method: 'POST',
+    },
+    crawler: {
+      url: 'http://site-crawler-service.xinshangshangxin.com/api/v1/crawler',
+      json: true,
+      method: 'POST',
+    },
+  },
 };

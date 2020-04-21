@@ -12,6 +12,8 @@ function baseBuild() {
 
   cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2-docker start .\/index.js --raw\" | .devDependencies={}" > ${buildDir}/package.json
 
+  node now.js
+
   _generateLog
   _dockerConfig ${nodeEnv} ${envDockerDir}
 }
