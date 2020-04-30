@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node --project tsconfig.json --files --pretty --log-error index.ts",
-    "build": "rm -rf ./dist/ && tsc -p tsconfig.json && cp package.json package-lock.json Dockerfile ./dist && cp src/index.html ./dist/src/",
+    "build": "rm -rf ./dist/ && tsc -p tsconfig.json && cp package.json package-lock.json Dockerfile ./dist && cp src/index.html src/headless-test.html ./dist/src/",
     "start:docker": "node index.js",
     "lint": "eslint --format './node_modules/eslint-formatter-friendly/index.js' \"src/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix"

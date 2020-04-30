@@ -12,6 +12,8 @@ module.exports = {
     alert: false,
     btoa: false,
     fetch: false,
+    navigator: false,
+    Notification: false,
   },
   rules: {
     'no-console': ['off'],
