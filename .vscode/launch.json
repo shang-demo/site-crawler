@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "ts-node debug",
+      "protocol": "inspector",
+      "args": ["index.ts"],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v12.14.1/bin/node",
+      "sourceMaps": true,
+      // "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      "env": {
+        "TS_NODE_FILES": true,
+        "TS_NODE_LOG_ERROR": true,
+        "TS_NODE_PRETTY": true
+      }
+    }
+  ]
+}

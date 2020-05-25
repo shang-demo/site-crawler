@@ -78,7 +78,7 @@ function try2error<T>(obj: T): OperationalError | T {
   if (isErrorLike(obj)) {
     const code = obj.code as keyof typeof ERROR_MAP;
     if (Errors[code]) {
-      return new Errors[code](obj.extra);
+      return new Errors[code](obj.extra, obj.message);
     }
 
     return new Errors.Unknown(obj, obj.message);

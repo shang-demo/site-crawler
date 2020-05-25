@@ -6,7 +6,7 @@ import { AddressInfo } from 'net';
 import { resolve as pathResolve } from 'path';
 
 import { clean, getEndpoint } from '../headless/global-browser';
-import { run } from '../vm/run';
+import { run } from '../vm';
 import { addBodyCatch } from './catch';
 import { requestLog, responseLog } from './log';
 
@@ -25,6 +25,15 @@ app.use(async (ctx, next) => {
   }
 });
 
+app.on('error', (err, ctx) => {
+  console.warn(
+    `uncaught error: ${ctx.method} ${ctx.url}`,
+    { ...ctx.request.query },
+    ctx.request.body
+  );
+  console.warn(err);
+});
+
 router.all('/clean', async () => {
   return clean();
 });
@@ -34,7 +43,9 @@ router.all('/endpoint', async () => {
 });
 
 router.post('*', async (ctx) => {
-  return run(ctx.request.body.code);
+  const data = await run(ctx.request.body);
+  console.info(data);
+  return data;
 });
 
 router.get('/headless-test*', async (ctx) => {

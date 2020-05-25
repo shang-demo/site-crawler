@@ -112,7 +112,7 @@ async function hideHeadlessAttr(browser: Browser, page: Page) {
   });
 }
 
-function getMockBrowser(browser: Browser) {
+function getMockBrowser(browser: Browser, afterPageCreate: Function) {
   const openedPages: Page[] = [];
 
   return new Proxy(browser, {
@@ -120,6 +120,7 @@ function getMockBrowser(browser: Browser) {
       if (name === 'newPage') {
         return async () => {
           const page = await Reflect.apply(target[name], target, []);
+          afterPageCreate(page);
           await hideHeadlessAttr(browser, page);
           openedPages.push(page);
           return page;
@@ -132,7 +133,7 @@ function getMockBrowser(browser: Browser) {
 
       if (name === 'close') {
         return async () => {
-          while (openedPages.length) {
+          while (openedPages.length > 0) {
             const page = openedPages.shift();
             // eslint-disable-next-line no-await-in-loop
             await page?.close();

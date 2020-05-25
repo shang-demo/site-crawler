@@ -18,7 +18,18 @@
         <textarea id="code" class="form-control" rows="6"></textarea>
       </div>
       <div class="row">
-        <button id="run" type="button" class="btn btn-primary">运行</button>
+        <button id="run" type="button" class="btn btn-primary">
+          <span class="text">运行</span>
+          <span class="spinner-grow spinner-grow-sm spinner" style="display: none;"></span>
+        </button>
+
+        <input
+          class="form-control"
+          id="timeout"
+          type="number"
+          value="60000"
+          style="max-width: 100px; margin-left: 20px;"
+        />
       </div>
       <div class="row">
         <textarea id="data" class="form-control" rows="8"></textarea>
@@ -43,21 +54,16 @@
     ></script>
 
     <script>
-      $('#code').val(
-        `const browser = await puppeteer.connect();
-const page = await browser.newPage();
-await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
-const result = await page.content();
-await browser.close();
-return result;`
-      );
-      $('#run').click(async () => {
+      async function run() {
         const code = $('#code').val();
 
+        // clean output
+        $('#render').html('');
         $('#data').val('');
+
         const response = await fetch('/', {
           method: 'post',
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ code, timeout: parseInt($('#timeout').val(), 10) }),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -66,20 +72,57 @@ return result;`
         const result = await response.json();
 
         if (result.type === 'error') {
-          $('#data').val(result.message);
+          $('#data').val(`[${result.code}]${result.message}]\n${result.stack}`);
           console.warn(result);
-        } else {
-          $('#data').val(result.data);
-          console.log(...result.log);
-
-          const iframe = document.createElement('iframe');
-          iframe.width = '100%';
-          $('#render').html('');
-          $('#render').append(iframe);
-          iframe.contentWindow.document.open();
-          iframe.contentWindow.document.write(result.data);
-          iframe.contentWindow.document.close();
+          return;
         }
+
+        console.log(...result.log);
+
+        if (typeof result.data !== 'string') {
+          console.info('result: ', result);
+
+          try {
+            $('#data').val(JSON.stringify(result.data, undefined, 2));
+          } catch (e) {
+            $('#data').val('format json failed, see in console');
+          }
+
+          return;
+        }
+
+        $('#data').val(result.data);
+        // render as html
+        const iframe = document.createElement('iframe');
+        iframe.width = '100%';
+        $('#render').html('');
+        $('#render').append(iframe);
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(result.data);
+        iframe.contentWindow.document.close();
+      }
+
+      $('#code').val(
+        `const browser = await puppeteer.connect(); // optional
+const page = await browser.newPage();
+await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
+const result = await page.content();
+await browser.close(); // optional
+return result;`
+      );
+      $('#run').click(async () => {
+        try {
+          $('#run .text').text('运行中...');
+          $('#run .spinner').show();
+          $('#run').prop('disabled', true);
+          await run();
+        } catch (e) {
+          console.warn(e);
+          $('#data').val('出现错误, 请查看控制台日志');
+        }
+        $('#run .text').text('运行');
+        $('#run .spinner').hide();
+        $('#run').prop('disabled', false);
       });
     </script>
   </body>
