@@ -6,29 +6,22 @@ import { parentPort, workerData } from 'worker_threads';
 
 import { Errors } from '../common/error';
 import { PuppeteerMock } from '../headless/puppeteer';
-import { WorkResultType } from './interface';
+import { WorkLogType, WorkResultType } from './interface';
 
 function wrapCode(code: string) {
   return `
-    // Define inline functions and capture user console logs.
-    const log = [];
-    const logger = (...args) => { 
-      log.push(args);
-
-      if (log.length > 100) { 
-        log.shift();  
-      } 
-    };
-    console.log = logger;
-    console.info = logger;
-    console.warn = logger;
-
-    // Wrap user code in an async function so async/await can be used out of the box.
     (async() => {
-      const data = await (async ()=> { ${code} })(); // user's code
-      return { log, data };
+      ${code}
     })();
   `;
+}
+
+function wrapLog(type: WorkLogType, data: any[]) {
+  try {
+    parentPort?.postMessage({ type, data });
+  } catch (e) {
+    console.warn(e);
+  }
 }
 
 async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoint: string }) {
@@ -53,6 +46,24 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
 
     puppeteer,
     browser,
+
+    console: {
+      log: (...args: any[]) => {
+        wrapLog(WorkLogType.LOG, args);
+      },
+      info: (...args: any[]) => {
+        wrapLog(WorkLogType.INFO, args);
+      },
+      warn: (...args: any[]) => {
+        wrapLog(WorkLogType.WARN, args);
+      },
+      error: (...args: any[]) => {
+        wrapLog(WorkLogType.ERROR, args);
+      },
+      debug: (...args: any[]) => {
+        wrapLog(WorkLogType.DEBUG, args);
+      },
+    },
   };
 
   const runCode = wrapCode(code);
@@ -83,13 +94,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
 
       parentPort?.postMessage({
         type: WorkResultType.RETURN,
-        data: {
-          log: [
-            e.message,
-            'log format failed, see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm',
-          ],
-          data: JSON.parse(JSON.stringify(data.data)),
-        },
+        data: JSON.parse(JSON.stringify(data)),
       });
     }
   } catch (e) {

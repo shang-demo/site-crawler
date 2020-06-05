@@ -34,7 +34,10 @@
       <div class="row">
         <textarea id="data" class="form-control" rows="8"></textarea>
       </div>
-      <div class="row" id="render" style="margin-top: 20px; min-height: 233px;"></div>
+      <div class="row" style="margin-top: 20px; min-height: 233px;">
+        <div id="log" class="col-sm-6" style="height: 233px; overflow: scroll;"></div>
+        <div id="render" class="col-sm-6"></div>
+      </div>
     </div>
 
     <script
@@ -53,37 +56,45 @@
       crossorigin="anonymous"
     ></script>
 
+    <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
     <script>
-      async function run() {
-        const code = $('#code').val();
+      function init() {
+        $('#code').val(
+          `const browser = await puppeteer.connect(); // optional
+const page = await browser.newPage();
+await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
+const result = await page.content();
+await browser.close(); // optional
+return result;`
+        );
+        $('#run').click(async () => {
+          $('#run .text').text('运行中...');
+          $('#run .spinner').show();
+          $('#run').prop('disabled', true);
 
-        // clean output
-        $('#render').html('');
-        $('#data').val('');
-
-        const response = await fetch('/', {
-          method: 'post',
-          body: JSON.stringify({ code, timeout: parseInt($('#timeout').val(), 10) }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          run();
         });
+      }
 
-        const result = await response.json();
+      function resetBtn() {
+        $('#run .text').text('运行');
+        $('#run .spinner').hide();
+        $('#run').prop('disabled', false);
+      }
 
+      function renderResult(result) {
         if (result.type === 'error') {
           $('#data').val(`[${result.code}]${result.message}]\n${result.stack}`);
           console.warn(result);
           return;
         }
 
-        console.log(...result.log);
-
-        if (typeof result.data !== 'string') {
+        if (typeof result !== 'string') {
           console.info('result: ', result);
 
           try {
-            $('#data').val(JSON.stringify(result.data, undefined, 2));
+            $('#data').val(JSON.stringify(result, undefined, 2));
           } catch (e) {
             $('#data').val('format json failed, see in console');
           }
@@ -91,39 +102,67 @@
           return;
         }
 
-        $('#data').val(result.data);
+        $('#data').val(result);
         // render as html
         const iframe = document.createElement('iframe');
         iframe.width = '100%';
         $('#render').html('');
         $('#render').append(iframe);
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write(result.data);
+        iframe.contentWindow.document.write(result);
         iframe.contentWindow.document.close();
       }
 
-      $('#code').val(
-        `const browser = await puppeteer.connect(); // optional
-const page = await browser.newPage();
-await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
-const result = await page.content();
-await browser.close(); // optional
-return result;`
-      );
-      $('#run').click(async () => {
-        try {
-          $('#run .text').text('运行中...');
-          $('#run .spinner').show();
-          $('#run').prop('disabled', true);
-          await run();
-        } catch (e) {
-          console.warn(e);
-          $('#data').val('出现错误, 请查看控制台日志');
-        }
-        $('#run .text').text('运行');
-        $('#run .spinner').hide();
-        $('#run').prop('disabled', false);
-      });
+      function run() {
+        const code = $('#code').val();
+
+        // clean output
+        $('#render').html('');
+        $('#data').val('');
+        $('#log').html('');
+
+        const socket = io({
+          transportOptions: {
+            polling: {
+              extraHeaders: {
+                'x-request-id': '' + Date.now(),
+              },
+            },
+          },
+        });
+
+        socket.on('connect', () => {
+          socket.emit('run', {
+            code,
+            timeout: parseInt($('#timeout').val(), 10),
+          });
+        });
+
+        socket.on('LOG', (data) => {
+          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
+        });
+        socket.on('INFO', (data) => {
+          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
+        });
+        socket.on('WARN', (data) => {
+          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
+        });
+        socket.on('DEBUG', (data) => {
+          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
+        });
+
+        socket.once('RETURN', (data) => {
+          renderResult(data);
+          resetBtn();
+        });
+
+        socket.once('unauthorized', (data, fn) => {
+          console.info(data);
+          fn();
+        });
+      }
+
+      init();
     </script>
   </body>
 </html>

@@ -5,7 +5,8 @@ import { Worker } from 'worker_threads';
 import { Errors, try2error } from '../common/error';
 import { getEndpoint } from '../headless/global-browser';
 import { PuppeteerMock } from '../headless/puppeteer';
-import { WorkResult, WorkResultType } from './interface';
+import { SocketClient } from '../server/socket';
+import { WorkResult, WorkResultType, WorkLogType } from './interface';
 
 async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: string[]) {
   worker.removeAllListeners();
@@ -32,7 +33,10 @@ async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: s
   );
 }
 
-async function run({ code, timeout = 60 * 1000 }: { code: string; timeout?: number }) {
+async function run(
+  { code, timeout = 60 * 1000 }: { code: string; timeout?: number },
+  client?: SocketClient
+) {
   const filename = pathResolve(__dirname, './puppeteer.worker.js');
   const browserWSEndpoint = await getEndpoint();
 
@@ -51,6 +55,11 @@ async function run({ code, timeout = 60 * 1000 }: { code: string; timeout?: numb
     const result = await new BB<any>((resolve, reject) => {
       worker.on('message', ({ type, data }: WorkResult) => {
         console.info('message data: ', data);
+
+        if (client) {
+          client.emit(type, data);
+        }
+
         switch (type) {
           case WorkResultType.PAGE_CREATE:
             targetIdList.push(data.targetId);
@@ -60,6 +69,12 @@ async function run({ code, timeout = 60 * 1000 }: { code: string; timeout?: numb
             break;
           case WorkResultType.ERROR:
             reject(try2error(data));
+            break;
+          case WorkLogType.DEBUG:
+          case WorkLogType.ERROR:
+          case WorkLogType.INFO:
+          case WorkLogType.LOG:
+          case WorkLogType.WARN:
             break;
           default:
             reject(new Errors.VMError({ type, data }));
