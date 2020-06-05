@@ -22,7 +22,11 @@ async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: s
       const targetId = (page.target() as any)._targetId;
 
       if (targetIdList.includes(targetId)) {
-        await page.close();
+        try {
+          await page.close();
+        } catch (e) {
+          // do nothing
+        }
       }
     })
   );

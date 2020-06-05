@@ -135,8 +135,12 @@ function getMockBrowser(browser: Browser, afterPageCreate: Function) {
         return async () => {
           while (openedPages.length > 0) {
             const page = openedPages.shift();
-            // eslint-disable-next-line no-await-in-loop
-            await page?.close();
+            try {
+              // eslint-disable-next-line no-await-in-loop
+              await page?.close();
+            } catch (e) {
+              // do nothing
+            }
           }
         };
       }

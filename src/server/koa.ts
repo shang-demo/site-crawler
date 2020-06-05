@@ -44,7 +44,6 @@ router.all('/endpoint', async () => {
 
 router.post('*', async (ctx) => {
   const data = await run(ctx.request.body);
-  console.info(data);
   return data;
 });
 

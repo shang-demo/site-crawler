@@ -88,7 +88,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
             e.message,
             'log format failed, see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm',
           ],
-          data: data.data,
+          data: JSON.parse(JSON.stringify(data.data)),
         },
       });
     }
