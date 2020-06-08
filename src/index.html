@@ -106,11 +106,77 @@ return result;`
         // render as html
         const iframe = document.createElement('iframe');
         iframe.width = '100%';
+        iframe.height = '100%';
         $('#render').html('');
         $('#render').append(iframe);
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(result);
         iframe.contentWindow.document.close();
+      }
+
+      function setUrl(requestId) {
+        var url = location.pathname + '?requestId=' + requestId;
+        history.pushState({ url: url, title: document.title }, document.title, url);
+      }
+
+      const getAbsoluteUrl = (() => {
+        let a;
+
+        return function (url) {
+          if (!a) {
+            a = document.createElement('a');
+          }
+
+          a.href = url;
+          return a.href;
+        };
+      })();
+
+      function createConnection(requestId) {
+        const socket = io({
+          transportOptions: {
+            polling: {
+              extraHeaders: {
+                'x-request-id': requestId,
+                'x-when': Date.now(),
+              },
+            },
+          },
+        });
+
+        const logEle = document.querySelector('#log');
+        function log(data) {
+          $('#log').append(JSON.stringify(Array.isArray(data) ? data.join(' ') : data) + '<br>');
+          logEle.scroll(0, logEle.scrollHeight);
+        }
+
+        socket.on('LOG', log);
+        socket.on('INFO', log);
+        socket.on('WARN', log);
+        socket.on('DEBUG', log);
+
+        socket.on('FILE', ({ filename, path }) => {
+          const url = getAbsoluteUrl(`.${path}`);
+          window.open(url, '_blank');
+        });
+
+        socket.once('RETURN', (data) => {
+          renderResult(data);
+          resetBtn();
+          setUrl('');
+        });
+
+        socket.on('ERROR', (data) => {
+          resetBtn();
+          log([JSON.stringify(data)]);
+        });
+
+        socket.once('unauthorized', (data, fn) => {
+          console.info(data);
+          fn();
+        });
+
+        return socket;
       }
 
       function run() {
@@ -121,48 +187,34 @@ return result;`
         $('#data').val('');
         $('#log').html('');
 
-        const socket = io({
-          transportOptions: {
-            polling: {
-              extraHeaders: {
-                'x-request-id': '' + Date.now(),
-              },
-            },
-          },
-        });
+        const requestId = '' + Date.now();
+        setUrl(requestId);
 
+        const socket = createConnection(requestId);
         socket.on('connect', () => {
           socket.emit('run', {
             code,
             timeout: parseInt($('#timeout').val(), 10),
           });
         });
+      }
 
-        socket.on('LOG', (data) => {
-          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
-        });
-        socket.on('INFO', (data) => {
-          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
-        });
-        socket.on('WARN', (data) => {
-          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
-        });
-        socket.on('DEBUG', (data) => {
-          $('#log').append(JSON.stringify(data.join(' ')) + '<br>');
-        });
+      function checkReconnect() {
+        const urlParams = new URLSearchParams(location.search);
+        const requestId = urlParams.get('requestId');
+        console.info('requestId: ', requestId);
 
-        socket.once('RETURN', (data) => {
-          renderResult(data);
-          resetBtn();
-        });
+        if (requestId) {
+          createConnection(requestId);
 
-        socket.once('unauthorized', (data, fn) => {
-          console.info(data);
-          fn();
-        });
+          $('#run .text').text('运行中...');
+          $('#run .spinner').show();
+          $('#run').prop('disabled', true);
+        }
       }
 
       init();
+      checkReconnect();
     </script>
   </body>
 </html>

@@ -1,12 +1,37 @@
 import BB from 'bluebird';
 import dayjs from 'dayjs';
+import { ensureFile, readFile, writeFile } from 'fs-extra';
 import _ from 'lodash';
+import { resolve as pathResolve } from 'path';
+import { v4 } from 'uuid';
 import { VM } from 'vm2';
 import { parentPort, workerData } from 'worker_threads';
 
+import { FILE_ROOT } from '../common/constant';
 import { Errors } from '../common/error';
 import { PuppeteerMock } from '../headless/puppeteer';
 import { WorkLogType, WorkResultType } from './interface';
+
+const USER_FILE_ROOT = pathResolve(FILE_ROOT, v4());
+
+async function writeFileAsync(filename: string, data: any) {
+  const p = pathResolve(USER_FILE_ROOT, filename);
+
+  await ensureFile(p);
+  await writeFile(p, data);
+
+  try {
+    parentPort?.postMessage({ type: 'FILE', data: { filename, path: p.replace(FILE_ROOT, '') } });
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+async function readFileAsync(filename: string, options?: any) {
+  const p = pathResolve(USER_FILE_ROOT, filename);
+
+  return readFile(p, options);
+}
 
 function wrapCode(code: string) {
   return `
@@ -18,7 +43,7 @@ function wrapCode(code: string) {
 
 function wrapLog(type: WorkLogType, data: any[]) {
   try {
-    parentPort?.postMessage({ type, data });
+    parentPort?.postMessage({ type, data: [new Date().toISOString(), ...data] });
   } catch (e) {
     console.warn(e);
   }
@@ -47,6 +72,8 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
     puppeteer,
     browser,
 
+    writeFileAsync,
+    readFileAsync,
     console: {
       log: (...args: any[]) => {
         wrapLog(WorkLogType.LOG, args);

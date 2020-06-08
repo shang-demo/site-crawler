@@ -3,9 +3,11 @@ import http from 'http';
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import Router from 'koa-router';
+import koaStatic from 'koa-static';
 import { AddressInfo } from 'net';
 import { resolve as pathResolve } from 'path';
 
+import { FILE_ROOT } from '../common/constant';
 import { clean, getEndpoint } from '../headless/global-browser';
 import { run } from '../vm';
 import { addBodyCatch } from './catch';
@@ -15,6 +17,7 @@ import { SocketIo } from './socket';
 const app = new Koa();
 const router = new Router();
 
+app.use(koaStatic(FILE_ROOT));
 app.use(koaBody());
 app.use(addBodyCatch);
 app.use(requestLog);
@@ -71,12 +74,30 @@ server.on('listening', () => {
   console.info(`http://127.0.0.1:${address.port}`, address);
 });
 
-const io = new SocketIo(server, [{ key: 'requestId', header: 'x-request-id', required: true }]);
+const io = new SocketIo(server, [
+  { key: 'requestId', header: 'x-request-id', required: true },
+  { key: 'when', header: 'x-when', excludeRoom: true },
+]);
 
 io.addConnectionListener((client) => {
   client.on('run', async (data) => {
     console.info(data);
-    await run(data, client);
+
+    // TODO: 防止多次请求, 再加入 requestId 检测是否已经使用过
+    if (Date.now() - client.userProps.when > 3000) {
+      io.emit(
+        client,
+        { message: '请求超时', serverWhen: Date.now(), when: client.userProps.when },
+        'LOG'
+      );
+      return;
+    }
+    // TODO: 判断上次执行已经结束, 还是还在继续执行中
+    // requestId 检测
+
+    await run(data, (...args) => {
+      io.emit(client.userProps, ...args);
+    });
   });
 });
 

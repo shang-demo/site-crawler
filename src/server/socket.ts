@@ -12,6 +12,7 @@ interface ParseKeyItem {
   key: string;
   header: string;
   required?: boolean;
+  excludeRoom?: boolean;
 }
 
 async function parseHeaders(keys: ParseKeyItem[], socket: SocketClient, next: (err?: any) => void) {
@@ -74,7 +75,7 @@ class SocketIo {
     this.init();
   }
 
-  public emit(clientPropsOrRoomId: string | { [key: string]: any }, data: any, event: any) {
+  public emit(clientPropsOrRoomId: string | { [key: string]: any }, data: any, event?: any) {
     if (!clientPropsOrRoomId) {
       console.debug('emit to all with event: ', event, 'data: ', data);
       this.io.emit(event, data);
@@ -185,6 +186,7 @@ class SocketIo {
           key: item.key,
           header: item.header ? item.header : `x-${decamelize(item.key, { separator: '-' })}`,
           required: !!item.required,
+          excludeRoom: !!item.excludeRoom,
         };
       }
 
@@ -202,16 +204,18 @@ class SocketIo {
       props = obj;
     }
 
-    const params = map(this.keys, 'key');
-
-    return params
-      .map((key) => {
-        const value = props[key];
-        if (isString(value) || isNumber(value)) {
-          return `${key}:${value}`;
-        }
+    return map(this.keys, ({ key, excludeRoom }) => {
+      console.info('excludeRoom: ', excludeRoom, key);
+      if (excludeRoom) {
         return undefined;
-      })
+      }
+
+      const value = props[key];
+      if (isString(value) || isNumber(value)) {
+        return `${key}:${value}`;
+      }
+      return undefined;
+    })
       .filter((value) => {
         return value !== undefined;
       })

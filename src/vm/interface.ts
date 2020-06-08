@@ -14,6 +14,6 @@ export enum WorkLogType {
 }
 
 export interface WorkResult {
-  type: WorkResultType | WorkLogType;
+  type: WorkResultType | WorkLogType | 'FILE';
   data?: any;
 }
