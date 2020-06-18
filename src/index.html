@@ -18,10 +18,26 @@
         <textarea id="code" class="form-control" rows="6"></textarea>
       </div>
       <div class="row">
-        <button id="run" type="button" class="btn btn-primary">
-          <span class="text">运行</span>
-          <span class="spinner-grow spinner-grow-sm spinner" style="display: none;"></span>
-        </button>
+        <div class="btn-group">
+          <button id="run" type="button" class="btn btn-primary">
+            <span class="text">运行</span>
+            <span class="spinner-grow spinner-grow-sm spinner" style="display: none;"></span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <button id="reload" class="dropdown-item">重新执行</button>
+            <a class="dropdown-item" href="/">重新加载</a>
+            <a class="dropdown-item" href="/pages" target="_blank">pages</a>
+          </div>
+        </div>
 
         <input
           class="form-control"
@@ -60,20 +76,44 @@
 
     <script>
       function init() {
-        $('#code').val(
-          `const browser = await puppeteer.connect(); // optional
+        let code = `const browser = await puppeteer.connect(); // optional
 const page = await browser.newPage();
 await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
 const result = await page.content();
 await browser.close(); // optional
-return result;`
-        );
-        $('#run').click(async () => {
+return result;`;
+
+        let b64code = new URL(location.href).searchParams.get('code');
+        if (b64code) {
+          try {
+            code = atob(b64code);
+          } catch (e) {
+            console.warn(e);
+          }
+        }
+
+        $('#code').val(code);
+
+        $('#run').click(() => {
           $('#run .text').text('运行中...');
           $('#run .spinner').show();
           $('#run').prop('disabled', true);
 
           run();
+        });
+
+        if (b64code) {
+          $('#run').click();
+        }
+
+        $('#reload').click(() => {
+          const data = $('#code').val();
+          console.info('data: ', data);
+          const u = new URL(location.href);
+          u.searchParams.set('code', btoa(data));
+          u.searchParams.set('requestId', '');
+
+          location.href = u.href;
         });
       }
 

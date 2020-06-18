@@ -13,6 +13,7 @@ import { run } from '../vm';
 import { addBodyCatch } from './catch';
 import { requestLog, responseLog } from './log';
 import { SocketIo } from './socket';
+import { getPages } from '../headless/browser';
 
 const app = new Koa();
 const router = new Router();
@@ -41,6 +42,16 @@ app.on('error', (err, ctx) => {
 
 router.all('/clean', async () => {
   return clean();
+});
+
+router.all('/pages', async () => {
+  const pages = await getPages();
+
+  console.info('pages: ', pages[0]);
+
+  return pages.map((page) => {
+    return { title: page.title(), url: page.url() };
+  });
 });
 
 router.all('/endpoint', async () => {

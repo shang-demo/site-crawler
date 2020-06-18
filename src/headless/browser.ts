@@ -1,5 +1,7 @@
 import { Browser, Page } from 'puppeteer';
 
+import { getBrowser } from './global-browser';
+
 async function hideHeadlessAttr(browser: Browser, page: Page) {
   const userAgent = await browser.userAgent();
 
@@ -150,4 +152,10 @@ function getMockBrowser(browser: Browser, afterPageCreate: Function) {
   });
 }
 
-export { getMockBrowser };
+async function getPages() {
+  const browser = await getBrowser();
+
+  return browser.pages();
+}
+
+export { getMockBrowser, getPages };
