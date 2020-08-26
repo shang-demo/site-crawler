@@ -15,6 +15,11 @@ const svc = {
 const browser = await puppeteer.connect();
 const page = await browser.newPage();
 await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2'});
+await page.evaluate(() => {
+  const scrollingElement = (document.scrollingElement || document.body);
+  scrollingElement.scrollTo({ top: scrollingElement.scrollHeight, left: 0, behavior: 'smooth' });
+});
+await Promise.delay(5000);
 const result = await page.content();
 await browser.close();
 return result;
@@ -31,7 +36,7 @@ return result;
       };
 
       const result = await rp(requestOptions);
-      return result.data;
+      return result;
     }
 
     return crawler(requestOptions, config);

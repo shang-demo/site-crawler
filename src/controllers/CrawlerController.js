@@ -29,6 +29,7 @@ const ctrl = {
       ctx.body = result.toStream();
     }
     catch (e) {
+      console.warn(e);
       ctx.wrapError(e);
     }
   },
