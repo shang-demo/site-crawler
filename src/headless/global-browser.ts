@@ -1,9 +1,9 @@
 import puppeteer, { Browser } from 'puppeteer';
 
-let globalBrowser: Browser | undefined;
+let globalBrowser: Promise<Browser> | undefined;
 async function getBrowser() {
   if (!globalBrowser) {
-    globalBrowser = await puppeteer.launch({
+    globalBrowser = puppeteer.launch({
       args: ['--no-sandbox'],
       executablePath: process.env.CHROME,
       headless: !process.env.CHROME,
@@ -23,7 +23,7 @@ async function clean() {
     return { len: 0 };
   }
 
-  const browser = globalBrowser;
+  const browser = await globalBrowser;
   globalBrowser = undefined;
 
   const pages = await browser.pages();
