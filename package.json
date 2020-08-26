@@ -10,6 +10,9 @@
     "lint": "eslint --format './node_modules/eslint-formatter-friendly/index.js' \"src/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "keywords": [
     "puppeteer",
     "headless-chrome"

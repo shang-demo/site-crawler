@@ -4,9 +4,9 @@ let globalBrowser: Promise<Browser> | undefined;
 async function getBrowser() {
   if (!globalBrowser) {
     globalBrowser = puppeteer.launch({
-      args: ['--no-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
       executablePath: process.env.CHROME,
-      headless: !process.env.CHROME,
+      headless: process.env.NODE_ENV !== 'development',
     });
   }
 

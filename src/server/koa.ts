@@ -40,6 +40,18 @@ app.on('error', (err, ctx) => {
   console.warn(err);
 });
 
+// leancloud不使用云函数和Hook
+router.all('/1.1/functions/_ops/metadatas', (ctx) => {
+  ctx.status = 404;
+  ctx.body = {};
+});
+
+// leancloud heartbeat
+router.all('/__engine/*', (ctx) => {
+  ctx.status = 200;
+  ctx.body = {};
+});
+
 router.all('/clean', async () => {
   return clean();
 });
@@ -77,7 +89,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 const server = http.createServer(app.callback());
-server.listen(process.env.PORT || 8080, process.env.HOST as any);
+server.listen(process.env.PORT || process.env.LEANCLOUD_APP_PORT || 8080, process.env.HOST as any);
 
 const address = server.address() as AddressInfo;
 
