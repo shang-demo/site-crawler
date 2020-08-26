@@ -15,11 +15,23 @@ const svc = {
 const browser = await puppeteer.connect();
 const page = await browser.newPage();
 await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2'});
-await page.evaluate(() => {
-  const scrollingElement = (document.scrollingElement || document.body);
-  scrollingElement.scrollTo({ top: scrollingElement.scrollHeight, left: 0, behavior: 'smooth' });
+await page.evaluate(async () => {
+  const scrollingElement = document.scrollingElement || document.body;
+
+  const scrollHeight = scrollingElement.scrollHeight;
+  const viewHeight =
+    window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+  let currentHeight = 0;
+  while (currentHeight + viewHeight < scrollHeight) {
+    currentHeight += viewHeight;
+    scrollingElement.scrollTo({ top: currentHeight, left: 0, behavior: 'smooth' });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+  }
 });
-await Promise.delay(5000);
+await Promise.delay(3000);
 const result = await page.content();
 await browser.close();
 return result;
