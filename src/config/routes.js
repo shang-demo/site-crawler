@@ -32,7 +32,9 @@ module.exports.routes = {
 
   'get /api/v1/record/update-time': 'ArticleController.getUpdateTime',
   'get /api/v1/record/:site': 'ArticleController.crawlerRecord',
+
   'get /api/v1/proxy/pipe': 'ProxyController.pipe',
+  'get /api/v1/crawler/stream': 'ProxyController.pipe',
 
   // task
   'get /api/v1/task/update-site': 'ArticleController.taskUpdate',

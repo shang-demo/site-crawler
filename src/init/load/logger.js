@@ -6,6 +6,7 @@ function lift() {
   this.logger.level = this.config.log.level || 'trace';
 
   global.logger = this.logger;
+  this.logger.log = this.logger.info;
 }
 
 module.exports = lift;

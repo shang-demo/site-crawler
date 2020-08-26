@@ -14,7 +14,11 @@ module.exports = {
       password: MONGODB_PASSWORD,
       hosts: [
         {
-          host: '112.74.107.82',
+          host: 'us.mongo.xinshangshangxin.com',
+          port: 13508,
+        },
+        {
+          host: 'zh.mongo.xinshangshangxin.com',
           port: 13508,
         }
       ],
@@ -28,7 +32,7 @@ module.exports = {
   ],
   request: {
     parser: {
-      url: 'http://site-parser-service.leanapp.cn/api/v1/parser',
+      url: 'http://site-crawler-parser.xinshangshangxin.com/api/v1/parser',
       json: true,
       method: 'POST',
     },

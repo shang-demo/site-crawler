@@ -1,4 +1,4 @@
-ifeq (now,$(firstword $(MAKECMDGOALS)))
+ifeq (now lean leancloud,$(firstword $(MAKECMDGOALS)))
   # use the rest as arguments for "run"
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   # ...and turn them into do-nothing targets
@@ -36,6 +36,11 @@ now:
 	@ # make now -- XXX
 	@ # will do now -t token XXXX
 	@ bash config/script-tools/now.sh $(RUN_ARGS)
+lean:leancloud
+leancloud:
+	@ # make leancloud -- XXX
+	@ # will do leancloud -t token XXXX
+	@ bash config/script-tools/leancloud.sh $(RUN_ARGS)
 copy:
 	@ sh config/copy.sh $(d)
 rsync:
