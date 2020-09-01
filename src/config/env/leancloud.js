@@ -1,6 +1,6 @@
-const MONGODB_DATABASE = 'noName';
-const MONGODB_USERNAME = 'noNameUser';
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD || 'WhvyGd6tH4VpL44k';
+const MONGODB_DATABASE = 'production';
+const MONGODB_USERNAME = 'productionUser';
+const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
 
 module.exports = {
   log: {
@@ -14,17 +14,18 @@ module.exports = {
       password: MONGODB_PASSWORD,
       hosts: [
         {
-          host: '112.74.107.82',
+          host: 'us.mongo.xinshangshangxin.com',
+          port: 13508,
+        },
+        {
+          host: 'zh.mongo.xinshangshangxin.com',
           port: 13508,
         }
       ],
       database: MONGODB_DATABASE,
     },
   },
-  port: process.env.LEANCLOUD_APP_PORT || 8080,
-  graphql: {
-    graphiql: true,
-  },
+  port: process.env.PORT || 8080,
   ip: undefined,
   bootstrap: [],
   proxiesCache: {
@@ -37,6 +38,9 @@ module.exports = {
   request: {
     eval: {
       host: 'http://site-crawler-eval.leanapp.cn',
+    },
+    headless: {
+      url: 'https://headless-lean.xinshangshangxin.com/'
     },
   },
 };

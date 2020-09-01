@@ -1,4 +1,4 @@
-ifeq (now,$(firstword $(MAKECMDGOALS)))
+ifeq (now lean leancloud,$(firstword $(MAKECMDGOALS)))
   # use the rest as arguments for "run"
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   # ...and turn them into do-nothing targets
@@ -25,6 +25,11 @@ pushHeroku:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
 	cd ./production && git add -A && git commit -m "auto" && git push heroku master && heroku logs --tail
+lean:leancloud
+leancloud:
+	@ # make leancloud -- XXX
+	@ # will do leancloud -t token XXXX
+	@ bash config/script-tools/leancloud.sh $(RUN_ARGS)
 merge:
 	git fetch template v2
 	git merge remotes/template/v2
