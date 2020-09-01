@@ -12,12 +12,7 @@ module.exports = {
     defaultMongo: {
       username: MONGODB_USERNAME,
       password: MONGODB_PASSWORD,
-      hosts: [
-        {
-          host: '112.74.107.82',
-          port: 13508,
-        }
-      ],
+      hosts: [],
       database: MONGODB_DATABASE,
     },
   },

@@ -31,7 +31,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "split2": "^2.1.1",
-    "website-parser": "^0.0.5"
+    "website-parser": "^0.0.6"
   },
   "devDependencies": {
     "ava": "^0.21.0",
@@ -39,7 +39,7 @@
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.0",
     "eslint-plugin-import": "^2.7.0",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "^4.0.2",
     "gulp-cached": "^1.1.1",
     "gulp-eslint": "^4.0.0",
     "gulp-filter": "^5.0.0",
