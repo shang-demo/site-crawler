@@ -5,6 +5,7 @@ module.exports = {
   },
   globals: {},
   rules: {
+    'no-console': 'off',
     'class-methods-use-this': ['error', { exceptMethods: ['render'] }],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
