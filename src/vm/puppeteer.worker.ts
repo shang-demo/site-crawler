@@ -6,6 +6,7 @@ import { resolve as pathResolve } from 'path';
 import { v4 } from 'uuid';
 import { VM } from 'vm2';
 import { parentPort, workerData } from 'worker_threads';
+import DeviceDescriptors from 'puppeteer/DeviceDescriptors';
 
 import { FILE_ROOT } from '../common/constant';
 import { Errors } from '../common/error';
@@ -71,6 +72,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
 
     puppeteer,
     browser,
+    DeviceDescriptors,
 
     writeFileAsync,
     readFileAsync,
