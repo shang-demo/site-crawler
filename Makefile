@@ -44,7 +44,7 @@ now:
 copy:
 	@ sh config/copy.sh $(d)
 rsync:
-	gulp buildServer
+	npm run build
 	cp ./package.json ./production
-	gsed -i 's/"start": ".*/"start": "PORT=4001 NODE_ENV=production pm2 start .\/index.js --name site-craler-service:4001",/g' ./production/package.json
+	sed -i 's/"start": ".*/"start": "PORT=4001 NODE_ENV=production pm2 start .\/index.js --name site-crawler-service:4001",/g' ./production/package.json
 	rsync --exclude .DS_Store --exclude .tmp --exclude .idea --exclude .git --exclude node_modules -crzvF -e "ssh -p 22" ./production/  ubuntu@106.54.169.129:/home/ubuntu/production/site-craler-service

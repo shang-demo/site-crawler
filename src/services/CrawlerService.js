@@ -15,6 +15,9 @@ const svc = {
 const browser = await puppeteer.connect();
 const page = await browser.newPage();
 await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2'});
+if (${requestOptions.device ? 'true' : 'false'}) {
+  await page.emulate(devices['${requestOptions.device}'])
+}
 await page.evaluate(async () => {
   const scrollingElement = document.scrollingElement || document.body;
 

@@ -12,7 +12,8 @@
     "start": "gulp",
     "lint": "./node_modules/.bin/eslint --fix src/",
     "test": "ava -v -s test/",
-    "typings": "node config/generate-typings init"
+    "typings": "node config/generate-typings init",
+    "build": "gulp buildServer"
   },
   "dependencies": {
     "bluebird": "3.5.0",
