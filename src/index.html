@@ -21,7 +21,10 @@
         <div class="btn-group">
           <button id="run" type="button" class="btn btn-primary">
             <span class="text">运行</span>
-            <span class="spinner-grow spinner-grow-sm spinner" style="display: none;"></span>
+            <span
+              class="spinner-grow spinner-grow-sm spinner"
+              style="display: none"
+            ></span>
           </button>
           <button
             type="button"
@@ -35,7 +38,21 @@
           <div class="dropdown-menu">
             <button id="reload" class="dropdown-item">重新执行</button>
             <a class="dropdown-item" href="/">重新加载</a>
+            <button id="shareUrl" class="dropdown-item">分享代码</button>
             <a class="dropdown-item" href="/pages" target="_blank">pages</a>
+          </div>
+        </div>
+
+        <div
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          class="toast hide"
+          style="margin-bottom: 0"
+          data-autohide="true"
+        >
+          <div class="toast-header">
+            <strong>复制成功</strong>
           </div>
         </div>
 
@@ -44,14 +61,18 @@
           id="timeout"
           type="number"
           value="60000"
-          style="max-width: 100px; margin-left: 20px;"
+          style="max-width: 100px; margin-left: 20px"
         />
       </div>
       <div class="row">
         <textarea id="data" class="form-control" rows="8"></textarea>
       </div>
-      <div class="row" style="margin-top: 20px; min-height: 233px;">
-        <div id="log" class="col-sm-6" style="height: 233px; overflow: scroll;"></div>
+      <div class="row" style="margin-top: 20px; min-height: 233px">
+        <div
+          id="log"
+          class="col-sm-6"
+          style="height: 233px; overflow: scroll"
+        ></div>
         <div id="render" class="col-sm-6"></div>
       </div>
     </div>
@@ -73,6 +94,7 @@
     ></script>
 
     <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
 
     <script>
       function init() {
@@ -83,80 +105,106 @@ const result = await page.content();
 await browser.close(); // optional
 return result;`;
 
-        let b64code = new URL(location.href).searchParams.get('code');
-        if (b64code) {
+        let encodedCode = new URL(location.href).searchParams.get("code");
+        if (encodedCode) {
           try {
-            code = atob(b64code);
+            // 先 decode
+            code = decodeURIComponent(encodedCode);
+            // 再 尝试 atob
+            code = atob(code);
+            // 在 尝试 decode
+            code = decodeURIComponent(code);
           } catch (e) {
             console.warn(e);
           }
         }
 
-        $('#code').val(code);
+        $("#code").val(code);
 
-        $('#run').click(() => {
-          $('#run .text').text('运行中...');
-          $('#run .spinner').show();
-          $('#run').prop('disabled', true);
+        $("#run").click(() => {
+          $("#run .text").text("运行中...");
+          $("#run .spinner").show();
+          $("#run").prop("disabled", true);
 
           run();
         });
 
-        if (b64code) {
-          $('#run').click();
+        const clipboard = new ClipboardJS("#shareUrl", {
+          text: function (trigger) {
+            code = $("#code").val();
+            encodedCode = encodeURIComponent(code);
+            const url = new URL(location.origin);
+            url.searchParams = new URLSearchParams();
+            url.searchParams.append("code", encodeURIComponent(btoa(encodedCode)));
+            return url.toString();
+          },
+        });
+
+        clipboard.on("success", function (e) {
+          $(".toast").toast({ delay: 3000 }).toast("show");
+        });
+
+        if (encodedCode) {
+          $("#run").click();
+        } else {
+          checkReconnect();
         }
 
-        $('#reload').click(() => {
-          const data = $('#code').val();
-          console.info('data: ', data);
+        $("#reload").click(() => {
+          const data = $("#code").val();
+          console.info("data: ", data);
           const u = new URL(location.href);
-          u.searchParams.set('code', btoa(data));
-          u.searchParams.set('requestId', '');
+          u.searchParams.set("code", btoa(data));
+          u.searchParams.set("requestId", "");
 
           location.href = u.href;
         });
       }
 
       function resetBtn() {
-        $('#run .text').text('运行');
-        $('#run .spinner').hide();
-        $('#run').prop('disabled', false);
+        $("#run .text").text("运行");
+        $("#run .spinner").hide();
+        $("#run").prop("disabled", false);
       }
 
       function renderResult(result) {
-        if (result.type === 'error') {
-          $('#data').val(`[${result.code}]${result.message}]\n${result.stack}`);
+        if (result.type === "error") {
+          $("#data").val(`[${result.code}]${result.message}]\n${result.stack}`);
           console.warn(result);
           return;
         }
 
-        if (typeof result !== 'string') {
-          console.info('result: ', result);
+        if (typeof result !== "string") {
+          console.info("result: ", result);
 
           try {
-            $('#data').val(JSON.stringify(result, undefined, 2));
+            $("#data").val(JSON.stringify(result, undefined, 2));
           } catch (e) {
-            $('#data').val('format json failed, see in console');
+            $("#data").val("format json failed, see in console");
           }
 
           return;
         }
 
-        $('#data').val(result);
+        $("#data").val(result);
         // render as html
-        const iframe = document.createElement('iframe');
-        iframe.width = '100%';
-        iframe.height = '100%';
-        $('#render').html('');
-        $('#render').append(iframe);
+        const iframe = document.createElement("iframe");
+        iframe.width = "100%";
+        iframe.height = "100%";
+        $("#render").html("");
+        $("#render").append(iframe);
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(result);
         iframe.contentWindow.document.close();
       }
 
       function setUrl(requestId) {
-        var url = location.pathname + '?requestId=' + requestId;
-        history.pushState({ url: url, title: document.title }, document.title, url);
+        var url = location.pathname + "?requestId=" + requestId;
+        history.pushState(
+          { url: url, title: document.title },
+          document.title,
+          url
+        );
       }
 
       const getAbsoluteUrl = (() => {
@@ -164,7 +212,7 @@ return result;`;
 
         return function (url) {
           if (!a) {
-            a = document.createElement('a');
+            a = document.createElement("a");
           }
 
           a.href = url;
@@ -177,41 +225,43 @@ return result;`;
           transportOptions: {
             polling: {
               extraHeaders: {
-                'x-request-id': requestId,
-                'x-when': Date.now(),
+                "x-request-id": requestId,
+                "x-when": Date.now(),
               },
             },
           },
         });
 
-        const logEle = document.querySelector('#log');
+        const logEle = document.querySelector("#log");
         function log(data) {
-          $('#log').append(JSON.stringify(Array.isArray(data) ? data.join(' ') : data) + '<br>');
+          $("#log").append(
+            JSON.stringify(Array.isArray(data) ? data.join(" ") : data) + "<br>"
+          );
           logEle.scroll(0, logEle.scrollHeight);
         }
 
-        socket.on('LOG', log);
-        socket.on('INFO', log);
-        socket.on('WARN', log);
-        socket.on('DEBUG', log);
+        socket.on("LOG", log);
+        socket.on("INFO", log);
+        socket.on("WARN", log);
+        socket.on("DEBUG", log);
 
-        socket.on('FILE', ({ filename, path }) => {
+        socket.on("FILE", ({ filename, path }) => {
           const url = getAbsoluteUrl(`.${path}`);
-          window.open(url, '_blank');
+          window.open(url, "_blank");
         });
 
-        socket.once('RETURN', (data) => {
+        socket.once("RETURN", (data) => {
           renderResult(data);
           resetBtn();
-          setUrl('');
+          setUrl("");
         });
 
-        socket.on('ERROR', (data) => {
+        socket.on("ERROR", (data) => {
           resetBtn();
           log([JSON.stringify(data)]);
         });
 
-        socket.once('unauthorized', (data, fn) => {
+        socket.once("unauthorized", (data, fn) => {
           console.info(data);
           fn();
         });
@@ -220,41 +270,40 @@ return result;`;
       }
 
       function run() {
-        const code = $('#code').val();
+        const code = $("#code").val();
 
         // clean output
-        $('#render').html('');
-        $('#data').val('');
-        $('#log').html('');
+        $("#render").html("");
+        $("#data").val("");
+        $("#log").html("");
 
-        const requestId = '' + Date.now();
+        const requestId = "" + Date.now();
         setUrl(requestId);
 
         const socket = createConnection(requestId);
-        socket.on('connect', () => {
-          socket.emit('run', {
+        socket.on("connect", () => {
+          socket.emit("run", {
             code,
-            timeout: parseInt($('#timeout').val(), 10),
+            timeout: parseInt($("#timeout").val(), 10),
           });
         });
       }
 
       function checkReconnect() {
         const urlParams = new URLSearchParams(location.search);
-        const requestId = urlParams.get('requestId');
-        console.info('requestId: ', requestId);
+        const requestId = urlParams.get("requestId");
+        console.info("requestId: ", requestId);
 
         if (requestId) {
           createConnection(requestId);
 
-          $('#run .text').text('运行中...');
-          $('#run .spinner').show();
-          $('#run').prop('disabled', true);
+          $("#run .text").text("运行中...");
+          $("#run .spinner").show();
+          $("#run").prop("disabled", true);
         }
       }
 
       init();
-      checkReconnect();
     </script>
   </body>
 </html>
