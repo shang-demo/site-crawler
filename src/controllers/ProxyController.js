@@ -17,7 +17,9 @@ const ctrl = {
       },
     };
     let config = { stream: true };
-    ctx.body = request({ ...requestOptions, ...config });
+    ctx.body = request({ ...requestOptions, ...config }).on('error', (e) => {
+      console.warn(ctx.request.query.url, e);
+    });
   },
 };
 
