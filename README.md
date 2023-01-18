@@ -14,6 +14,5 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm start
 
 ```bash
 docker build -t headless-chrome .
-# 注意 文件映射, /data/headless-chrome 文件夹权限
-docker run -e FILE_ROOT=/home/pptruser/fs -v /data/headless-chrome:/home/pptruser/fs -itd --name headless-chrome headless-chrome
+docker rm -f headless-chrome && docker run -p 8080:8080 -itd --name headless-chrome headless-chrome
 ```
