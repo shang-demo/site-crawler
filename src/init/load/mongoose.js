@@ -99,7 +99,7 @@ function define(db, modelName, opt, config) {
     });
   }
 
-  let modelNameModel = db.model(modelName, modelNameSchema);
+  let modelNameModel = mongoose.model(modelName, modelNameSchema);
 
   return {
     model: modelNameModel,
