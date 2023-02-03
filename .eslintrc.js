@@ -1,10 +1,5 @@
 module.exports = {
-  extends: ['@ofa2/eslint-config'],
-  parserOptions: {
-    project: ['./tsconfig.json'],
-    ecmaVersion: 2018,
-    sourceType: 'module',
-  },
+  extends: ["@s4p/eslint-config"],
   globals: {
     $: false,
     window: false,
@@ -14,12 +9,5 @@ module.exports = {
     fetch: false,
     navigator: false,
     Notification: false,
-  },
-  rules: {
-    'no-console': ['off'],
-    'no-alert': ['off'],
-  },
-  settings: {
-    'import/core-modules': ['@deep/deep'],
   },
 };

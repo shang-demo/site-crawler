@@ -1,4 +1,4 @@
-import puppeteer, { Browser, ConnectOptions, LaunchOptions, Page } from 'puppeteer';
+import puppeteer, { Browser, ConnectOptions, Page } from 'puppeteer';
 
 import { getMockBrowser } from './browser';
 import { getEndpoint } from './global-browser';
@@ -6,11 +6,15 @@ import { getEndpoint } from './global-browser';
 class PuppeteerMock {
   private browser: Browser | undefined;
 
+  public async close() {
+    await this.browser?.close();
+  }
+
   public async connect(
     options?: ConnectOptions,
     afterPageCreate = (page: Page): any => {
       return page;
-    }
+    },
   ) {
     if (this.browser) {
       return this.browser;
@@ -18,7 +22,7 @@ class PuppeteerMock {
 
     let browserWSEndpoint;
 
-    if (!options || !options.browserWSEndpoint) {
+    if (!options?.browserWSEndpoint) {
       browserWSEndpoint = await getEndpoint();
     } else {
       browserWSEndpoint = options.browserWSEndpoint;
@@ -33,12 +37,8 @@ class PuppeteerMock {
     return this.browser;
   }
 
-  public async launch(options: LaunchOptions | ConnectOptions) {
+  public async launch(options: ConnectOptions) {
     return this.connect(options);
-  }
-
-  public async close() {
-    await this.browser?.close();
   }
 }
 

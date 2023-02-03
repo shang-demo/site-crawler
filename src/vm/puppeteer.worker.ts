@@ -3,10 +3,10 @@ import dayjs from 'dayjs';
 import { ensureFile, readFile, writeFile } from 'fs-extra';
 import _ from 'lodash';
 import { resolve as pathResolve } from 'path';
+import { KnownDevices } from 'puppeteer';
 import { v4 } from 'uuid';
 import { VM } from 'vm2';
 import { parentPort, workerData } from 'worker_threads';
-import DeviceDescriptors from 'puppeteer/DeviceDescriptors';
 
 import { FILE_ROOT } from '../common/constant';
 import { Errors } from '../common/error';
@@ -22,7 +22,10 @@ async function writeFileAsync(filename: string, data: any) {
   await writeFile(p, data);
 
   try {
-    parentPort?.postMessage({ type: 'FILE', data: { filename, path: p.replace(FILE_ROOT, '') } });
+    parentPort?.postMessage({
+      type: 'FILE',
+      data: { filename, path: p.replace(FILE_ROOT, '') },
+    });
   } catch (e) {
     console.warn(e);
   }
@@ -44,19 +47,27 @@ function wrapCode(code: string) {
 
 function wrapLog(type: WorkLogType, data: any[]) {
   try {
-    parentPort?.postMessage({ type, data: [new Date().toISOString(), ...data] });
+    parentPort?.postMessage({
+      type,
+      data: [new Date().toISOString(), ...data],
+    });
   } catch (e) {
     console.warn(e);
   }
 }
 
-async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoint: string }) {
+async function run({
+  code,
+  browserWSEndpoint,
+}: {
+  code: string;
+  browserWSEndpoint: string;
+}) {
   const puppeteer = new PuppeteerMock();
   const browser = await puppeteer.connect({ browserWSEndpoint }, (page) => {
     parentPort?.postMessage({
       type: WorkResultType.PAGE_CREATE,
       data: {
-        // eslint-disable-next-line no-underscore-dangle
         targetId: (page.target() as any)._targetId,
       },
     });
@@ -72,7 +83,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
 
     puppeteer,
     browser,
-    DeviceDescriptors,
+    DeviceDescriptors: KnownDevices,
 
     writeFileAsync,
     readFileAsync,
@@ -104,7 +115,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
     await puppeteer.close();
 
     return data;
-  } catch (e) {
+  } catch (e: any) {
     console.warn(e);
     await puppeteer.close();
 
@@ -126,7 +137,7 @@ async function run({ code, browserWSEndpoint }: { code: string; browserWSEndpoin
         data: JSON.parse(JSON.stringify(data)),
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     console.warn(e);
 
     let data;

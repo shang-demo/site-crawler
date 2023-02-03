@@ -1,19 +1,19 @@
+import Router from '@koa/router';
 import { createReadStream } from 'fs';
 import http from 'http';
 import Koa from 'koa';
 import koaBody from 'koa-body';
-import Router from 'koa-router';
 import koaStatic from 'koa-static';
 import { AddressInfo } from 'net';
 import { resolve as pathResolve } from 'path';
 
 import { FILE_ROOT } from '../common/constant';
+import { getPages } from '../headless/browser';
 import { clean, getEndpoint } from '../headless/global-browser';
 import { run } from '../vm';
 import { addBodyCatch } from './catch';
 import { requestLog, responseLog } from './log';
 import { SocketIo } from './socket';
-import { getPages } from '../headless/browser';
 
 const app = new Koa();
 const router = new Router();
@@ -35,7 +35,7 @@ app.on('error', (err, ctx) => {
   console.warn(
     `uncaught error: ${ctx.method} ${ctx.url}`,
     { ...ctx.request.query },
-    ctx.request.body
+    ctx.request.body,
   );
   console.warn(err);
 });
@@ -47,7 +47,7 @@ router.all('/1.1/functions/_ops/metadatas', (ctx) => {
 });
 
 // leancloud heartbeat
-router.all('/__engine/*', (ctx) => {
+router.all(/^\/__engine/, (ctx) => {
   ctx.status = 200;
   ctx.body = {};
 });
@@ -70,17 +70,17 @@ router.all('/endpoint', async () => {
   return getEndpoint();
 });
 
-router.post('*', async (ctx) => {
+router.post(/.*/, async (ctx) => {
   const data = await run(ctx.request.body);
   return data;
 });
 
-router.get('/headless-test*', async (ctx) => {
+router.get(/^\/headless-test*/, async (ctx) => {
   ctx.type = 'html';
   return createReadStream(pathResolve(__dirname, '../headless-test.html'));
 });
 
-router.get('*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   ctx.type = 'html';
   return createReadStream(pathResolve(__dirname, '../index.html'));
 });
@@ -89,7 +89,10 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 const server = http.createServer(app.callback());
-server.listen(process.env.PORT || process.env.LEANCLOUD_APP_PORT || 8080, process.env.HOST as any);
+server.listen(
+  process.env.PORT || process.env.LEANCLOUD_APP_PORT || 8080,
+  process.env.HOST as any,
+);
 
 const address = server.address() as AddressInfo;
 
@@ -110,8 +113,12 @@ io.addConnectionListener((client) => {
     if (Date.now() - client.userProps.when > 3000) {
       io.emit(
         client,
-        { message: '请求超时', serverWhen: Date.now(), when: client.userProps.when },
-        'LOG'
+        {
+          message: '请求超时',
+          serverWhen: Date.now(),
+          when: client.userProps.when,
+        },
+        'LOG',
       );
       return;
     }

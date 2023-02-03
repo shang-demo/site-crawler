@@ -1,9 +1,17 @@
-import { Server } from 'http';
 import { decamelize } from 'humps';
-import { get, isNumber, isPlainObject, isString, isUndefined, map, sortBy } from 'lodash';
-import socketIO from 'socket.io';
+import {
+  get,
+  isNumber,
+  isPlainObject,
+  isString,
+  isUndefined,
+  map,
+  sortBy,
+} from 'lodash';
+import { Server, Socket } from 'socket.io';
+import { Server as HttpServer } from 'http';
 
-export interface SocketClient extends socketIO.Socket {
+export interface SocketClient extends Socket {
   userProps: { [key: string]: any };
   headersError: { key: string; message: string }[];
 }
@@ -15,10 +23,13 @@ interface ParseKeyItem {
   excludeRoom?: boolean;
 }
 
-async function parseHeaders(keys: ParseKeyItem[], socket: SocketClient, next: (err?: any) => void) {
+async function parseHeaders(
+  keys: ParseKeyItem[],
+  socket: SocketClient,
+  next: (err?: any) => void,
+) {
   const errors: { key: string; message: string }[] = [];
 
-  // eslint-disable-next-line no-param-reassign
   socket.userProps = {};
 
   keys.forEach((item) => {
@@ -33,13 +44,11 @@ async function parseHeaders(keys: ParseKeyItem[], socket: SocketClient, next: (e
       return null;
     }
 
-    // eslint-disable-next-line no-param-reassign
     socket.userProps[key] = value;
     return null;
   });
 
-  if (errors && errors.length) {
-    // eslint-disable-next-line no-param-reassign
+  if (errors?.length) {
     socket.headersError = errors;
   }
 
@@ -61,21 +70,25 @@ async function checkHeadersError(client: SocketClient) {
 class SocketIo {
   public keys: ParseKeyItem[] = [];
 
-  public io: socketIO.Server;
+  public io: Server;
 
   private connectionListeners: any[] = [];
 
   constructor(
-    private server: Server,
+    private server: HttpServer,
     private socketHeaderKeys: ParseKeyItem[] = [],
-    private autoJoinRoom = true
+    private autoJoinRoom = true,
   ) {
     this.io = this.getIO();
 
     this.init();
   }
 
-  public emit(clientPropsOrRoomId: string | { [key: string]: any }, data: any, event?: any) {
+  public emit(
+    clientPropsOrRoomId: string | { [key: string]: any },
+    data: any,
+    event?: any,
+  ) {
     if (!clientPropsOrRoomId) {
       console.debug('emit to all with event: ', event, 'data: ', data);
       this.io.emit(event, data);
@@ -95,13 +108,13 @@ class SocketIo {
     console.debug({ roomId, event, data });
 
     this.io.to(roomId).emit(event, data);
-    this.io.in(roomId).clients((err: any, clients: any) => {
-      if (err) {
-        return null;
-      }
-      console.debug(`${roomId} clients length: `, clients.length);
-      return null;
-    });
+    // this.io.in(roomId).clients((err: any, clients: any) => {
+    //   if (err) {
+    //     return null;
+    //   }
+    //   console.debug(`${roomId} clients length: `, clients.length);
+    //   return null;
+    // });
   }
 
   public addConnectionListener(fun: (client: SocketClient) => any) {
@@ -154,17 +167,11 @@ class SocketIo {
     this.parseSocketHeaderKeys();
     const extraHeader = map(this.keys, 'header');
 
-    const io = socketIO(this.server, {
-      handlePreflightRequest(_server, req, res) {
-        extraHeader.unshift(...['content-type', 'authorization']);
-
-        const headers = {
-          'Access-Control-Allow-Headers': `${extraHeader.join(',')}`,
-          'Access-Control-Allow-Origin': req.headers.origin,
-          'Access-Control-Allow-Credentials': 'true',
-        };
-        res.writeHead(200, headers);
-        res.end();
+    const io = new Server(this.server, {
+      cors: {
+        origin: true,
+        allowedHeaders: [...extraHeader, 'content-type', 'authorization'],
+        credentials: true,
       },
     });
 
@@ -184,7 +191,9 @@ class SocketIo {
       if (isPlainObject(item)) {
         return {
           key: item.key,
-          header: item.header ? item.header : `x-${decamelize(item.key, { separator: '-' })}`,
+          header: item.header
+            ? item.header
+            : `x-${decamelize(item.key, { separator: '-' })}`,
           required: !!item.required,
           excludeRoom: !!item.excludeRoom,
         };

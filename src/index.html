@@ -1,309 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Headless Chrome</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <textarea id="code" class="form-control" rows="6"></textarea>
-      </div>
-      <div class="row">
-        <div class="btn-group">
-          <button id="run" type="button" class="btn btn-primary">
-            <span class="text">运行</span>
-            <span
-              class="spinner-grow spinner-grow-sm spinner"
-              style="display: none"
-            ></span>
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu">
-            <button id="reload" class="dropdown-item">重新执行</button>
-            <a class="dropdown-item" href="/">重新加载</a>
-            <button id="shareUrl" class="dropdown-item">分享代码</button>
-            <a class="dropdown-item" href="/pages" target="_blank">pages</a>
-          </div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Headless Chrome</title>
 
-        <div
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-          class="toast hide"
-          style="margin-bottom: 0"
-          data-autohide="true"
-        >
-          <div class="toast-header">
-            <strong>复制成功</strong>
-          </div>
-        </div>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+</head>
 
-        <input
-          class="form-control"
-          id="timeout"
-          type="number"
-          value="60000"
-          style="max-width: 100px; margin-left: 20px"
-        />
-      </div>
-      <div class="row">
-        <textarea id="data" class="form-control" rows="8"></textarea>
-      </div>
-      <div class="row" style="margin-top: 20px; min-height: 233px">
-        <div
-          id="log"
-          class="col-sm-6"
-          style="height: 233px; overflow: scroll"
-        ></div>
-        <div id="render" class="col-sm-6"></div>
-      </div>
+<body>
+  <div class="container">
+    <div class="row">
+      <textarea id="code" class="form-control" rows="6"></textarea>
     </div>
+    <div class="row">
+      <div class="btn-group">
+        <button id="run" type="button" class="btn btn-primary">
+          <span class="text">运行</span>
+          <span class="spinner-grow spinner-grow-sm spinner" style="display: none"></span>
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <button id="reload" class="dropdown-item">重新执行</button>
+          <a class="dropdown-item" href="/">重新加载</a>
+          <button id="shareUrl" class="dropdown-item">分享代码</button>
+          <a class="dropdown-item" href="/pages" target="_blank">pages</a>
+        </div>
+      </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-      crossorigin="anonymous"
-    ></script>
+      <div role="alert" aria-live="assertive" aria-atomic="true" class="toast hide" style="margin-bottom: 0"
+        data-autohide="true">
+        <div class="toast-header">
+          <strong>复制成功</strong>
+        </div>
+      </div>
 
-    <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+      <input class="form-control" id="timeout" type="number" value="60000"
+        style="max-width: 100px; margin-left: 20px" />
+    </div>
+    <div class="row">
+      <textarea id="data" class="form-control" rows="8"></textarea>
+    </div>
+    <div class="row" style="margin-top: 20px; min-height: 233px">
+      <div id="log" class="col-sm-6" style="height: 233px; overflow: scroll"></div>
+      <div id="render" class="col-sm-6"></div>
+    </div>
+  </div>
 
-    <script>
-      function init() {
-        let code = `const browser = await puppeteer.connect(); // optional
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+
+  <script>
+    function init() {
+      let code = `const browser = await puppeteer.connect(); // optional
 const page = await browser.newPage();
 await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
 const result = await page.content();
 await browser.close(); // optional
 return result;`;
 
-        let encodedCode = new URL(location.href).searchParams.get("code");
-        if (encodedCode) {
-          try {
-            // 先 decode
-            code = decodeURIComponent(encodedCode);
-            // 再 尝试 atob
-            code = atob(code);
-            // 在 尝试 decode
-            code = decodeURIComponent(code);
-          } catch (e) {
-            console.warn(e);
-          }
+      let encodedCode = new URL(location.href).searchParams.get("code");
+      if (encodedCode) {
+        try {
+          // 先 decode
+          code = decodeURIComponent(encodedCode);
+          // 再 尝试 atob
+          code = atob(code);
+          // 在 尝试 decode
+          code = decodeURIComponent(code);
+        } catch (e) {
+          console.warn(e);
         }
-
-        $("#code").val(code);
-
-        $("#run").click(() => {
-          $("#run .text").text("运行中...");
-          $("#run .spinner").show();
-          $("#run").prop("disabled", true);
-
-          run();
-        });
-
-        const clipboard = new ClipboardJS("#shareUrl", {
-          text: function (trigger) {
-            code = $("#code").val();
-            encodedCode = encodeURIComponent(code);
-            const url = new URL(location.origin);
-            url.searchParams = new URLSearchParams();
-            url.searchParams.append("code", encodeURIComponent(btoa(encodedCode)));
-            return url.toString();
-          },
-        });
-
-        clipboard.on("success", function (e) {
-          $(".toast").toast({ delay: 3000 }).toast("show");
-        });
-
-        if (encodedCode) {
-          $("#run").click();
-        } else {
-          checkReconnect();
-        }
-
-        $("#reload").click(() => {
-          const data = $("#code").val();
-          console.info("data: ", data);
-          const u = new URL(location.href);
-          u.searchParams.set("code", btoa(data));
-          u.searchParams.set("requestId", "");
-
-          location.href = u.href;
-        });
       }
 
-      function resetBtn() {
-        $("#run .text").text("运行");
-        $("#run .spinner").hide();
-        $("#run").prop("disabled", false);
+      $("#code").val(code);
+
+      $("#run").click(() => {
+        $("#run .text").text("运行中...");
+        $("#run .spinner").show();
+        $("#run").prop("disabled", true);
+
+        run();
+      });
+
+      const clipboard = new ClipboardJS("#shareUrl", {
+        text: function (trigger) {
+          code = $("#code").val();
+          encodedCode = encodeURIComponent(code);
+          const url = new URL(location.origin);
+          url.searchParams = new URLSearchParams();
+          url.searchParams.append("code", encodeURIComponent(btoa(encodedCode)));
+          return url.toString();
+        },
+      });
+
+      clipboard.on("success", function (e) {
+        $(".toast").toast({ delay: 3000 }).toast("show");
+      });
+
+      if (encodedCode) {
+        $("#run").click();
+      } else {
+        checkReconnect();
       }
 
-      function renderResult(result) {
-        if (result.type === "error") {
-          $("#data").val(`[${result.code}]${result.message}]\n${result.stack}`);
-          console.warn(result);
-          return;
+      $("#reload").click(() => {
+        const data = $("#code").val();
+        console.info("data: ", data);
+        const u = new URL(location.href);
+        u.searchParams.set("code", btoa(data));
+        u.searchParams.set("requestId", "");
+
+        location.href = u.href;
+      });
+    }
+
+    function resetBtn() {
+      $("#run .text").text("运行");
+      $("#run .spinner").hide();
+      $("#run").prop("disabled", false);
+    }
+
+    function renderResult(result) {
+      if (result.type === "error") {
+        $("#data").val(`[${result.code}]${result.message}]\n${result.stack}`);
+        console.warn(result);
+        return;
+      }
+
+      if (typeof result !== "string") {
+        console.info("result: ", result);
+
+        try {
+          $("#data").val(JSON.stringify(result, undefined, 2));
+        } catch (e) {
+          $("#data").val("format json failed, see in console");
         }
 
-        if (typeof result !== "string") {
-          console.info("result: ", result);
+        return;
+      }
 
-          try {
-            $("#data").val(JSON.stringify(result, undefined, 2));
-          } catch (e) {
-            $("#data").val("format json failed, see in console");
-          }
+      $("#data").val(result);
+      // render as html
+      const iframe = document.createElement("iframe");
+      iframe.width = "100%";
+      iframe.height = "100%";
+      $("#render").html("");
+      $("#render").append(iframe);
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write(result);
+      iframe.contentWindow.document.close();
+    }
 
-          return;
+    function setUrl(requestId) {
+      var url = location.pathname + "?requestId=" + requestId;
+      history.pushState(
+        { url: url, title: document.title },
+        document.title,
+        url
+      );
+    }
+
+    const getAbsoluteUrl = (() => {
+      let a;
+
+      return function (url) {
+        if (!a) {
+          a = document.createElement("a");
         }
 
-        $("#data").val(result);
-        // render as html
-        const iframe = document.createElement("iframe");
-        iframe.width = "100%";
-        iframe.height = "100%";
-        $("#render").html("");
-        $("#render").append(iframe);
-        iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write(result);
-        iframe.contentWindow.document.close();
-      }
+        a.href = url;
+        return a.href;
+      };
+    })();
 
-      function setUrl(requestId) {
-        var url = location.pathname + "?requestId=" + requestId;
-        history.pushState(
-          { url: url, title: document.title },
-          document.title,
-          url
-        );
-      }
-
-      const getAbsoluteUrl = (() => {
-        let a;
-
-        return function (url) {
-          if (!a) {
-            a = document.createElement("a");
-          }
-
-          a.href = url;
-          return a.href;
-        };
-      })();
-
-      function createConnection(requestId) {
-        const socket = io({
-          transportOptions: {
-            polling: {
-              extraHeaders: {
-                "x-request-id": requestId,
-                "x-when": Date.now(),
-              },
+    function createConnection(requestId) {
+      const socket = io({
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              "x-request-id": requestId,
+              "x-when": Date.now(),
             },
           },
-        });
+        },
+      });
 
-        const logEle = document.querySelector("#log");
-        function log(data) {
-          $("#log").append(
-            JSON.stringify(Array.isArray(data) ? data.join(" ") : data) + "<br>"
-          );
-          logEle.scroll(0, logEle.scrollHeight);
-        }
-
-        socket.on("LOG", log);
-        socket.on("INFO", log);
-        socket.on("WARN", log);
-        socket.on("DEBUG", log);
-
-        socket.on("FILE", ({ filename, path }) => {
-          const url = getAbsoluteUrl(`.${path}`);
-          window.open(url, "_blank");
-        });
-
-        socket.once("RETURN", (data) => {
-          renderResult(data);
-          resetBtn();
-          setUrl("");
-        });
-
-        socket.on("ERROR", (data) => {
-          resetBtn();
-          log([JSON.stringify(data)]);
-        });
-
-        socket.once("unauthorized", (data, fn) => {
-          console.info(data);
-          fn();
-        });
-
-        return socket;
+      const logEle = document.querySelector("#log");
+      function log(data) {
+        $("#log").append(
+          JSON.stringify(Array.isArray(data) ? data.join(" ") : data) + "<br>"
+        );
+        logEle.scroll(0, logEle.scrollHeight);
       }
 
-      function run() {
-        const code = $("#code").val();
+      socket.on("LOG", log);
+      socket.on("INFO", log);
+      socket.on("WARN", log);
+      socket.on("DEBUG", log);
 
-        // clean output
-        $("#render").html("");
-        $("#data").val("");
-        $("#log").html("");
+      socket.on("FILE", ({ filename, path }) => {
+        const url = getAbsoluteUrl(`.${path}`);
+        window.open(url, "_blank");
+      });
 
-        const requestId = "" + Date.now();
-        setUrl(requestId);
+      socket.once("RETURN", (data) => {
+        renderResult(data);
+        resetBtn();
+        setUrl("");
+      });
 
-        const socket = createConnection(requestId);
-        socket.on("connect", () => {
-          socket.emit("run", {
-            code,
-            timeout: parseInt($("#timeout").val(), 10),
-          });
+      socket.on("ERROR", (data) => {
+        resetBtn();
+        log([JSON.stringify(data)]);
+      });
+
+      socket.once("unauthorized", (data, fn) => {
+        console.info(data);
+        fn();
+      });
+
+      return socket;
+    }
+
+    function run() {
+      const code = $("#code").val();
+
+      // clean output
+      $("#render").html("");
+      $("#data").val("");
+      $("#log").html("");
+
+      const requestId = "" + Date.now();
+      setUrl(requestId);
+
+      const socket = createConnection(requestId);
+      socket.on("connect", () => {
+        socket.emit("run", {
+          code,
+          timeout: parseInt($("#timeout").val(), 10),
         });
+      });
+    }
+
+    function checkReconnect() {
+      const urlParams = new URLSearchParams(location.search);
+      const requestId = urlParams.get("requestId");
+      console.info("requestId: ", requestId);
+
+      if (requestId) {
+        createConnection(requestId);
+
+        $("#run .text").text("运行中...");
+        $("#run .spinner").show();
+        $("#run").prop("disabled", true);
       }
+    }
 
-      function checkReconnect() {
-        const urlParams = new URLSearchParams(location.search);
-        const requestId = urlParams.get("requestId");
-        console.info("requestId: ", requestId);
+    init();
+  </script>
+</body>
 
-        if (requestId) {
-          createConnection(requestId);
-
-          $("#run .text").text("运行中...");
-          $("#run .spinner").show();
-          $("#run").prop("disabled", true);
-        }
-      }
-
-      init();
-    </script>
-  </body>
 </html>

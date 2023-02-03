@@ -7,7 +7,11 @@ import { getEndpoint } from '../headless/global-browser';
 import { PuppeteerMock } from '../headless/puppeteer';
 import { WorkLogType, WorkResult, WorkResultType } from './interface';
 
-async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: string[]) {
+async function killVm(
+  worker: Worker,
+  browserWSEndpoint: string,
+  targetIdList: string[],
+) {
   worker.removeAllListeners();
   await worker.terminate();
 
@@ -18,7 +22,6 @@ async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: s
 
   await Promise.all(
     pages.map(async (page) => {
-      // eslint-disable-next-line no-underscore-dangle
       const targetId = (page.target() as any)._targetId;
 
       if (targetIdList.includes(targetId)) {
@@ -28,13 +31,13 @@ async function killVm(worker: Worker, browserWSEndpoint: string, targetIdList: s
           // do nothing
         }
       }
-    })
+    }),
   );
 }
 
 async function run(
   { code, timeout = 60 * 1000 }: { code: string; timeout?: number },
-  emit?: (data: any, event: any) => void
+  emit?: (data: any, event: any) => void,
 ) {
   const filename = pathResolve(__dirname, './puppeteer.worker.js');
   const browserWSEndpoint = await getEndpoint();

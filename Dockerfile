@@ -1,32 +1,28 @@
-#
-# 构建环境
-#
 FROM node:16-slim AS build
 
 WORKDIR /app
 
 COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
-RUN npm install
+COPY pnpm-lock.yaml ./pnpm-lock.yaml
+RUN npm install -g pnpm && pnpm install
+
 COPY . .
 RUN npm run build
 
-#
-# 运行环境
-#
-FROM zenika/alpine-chrome:with-node
+FROM ghcr.io/puppeteer/puppeteer:19.6.2
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD 1
-ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
+USER root
+RUN npm install -g pnpm
 
-WORKDIR /usr/src/app
+USER pptruser
 
-COPY --chown=chrome --from=build /app/dist/package.json /app/dist/package-lock.json ./
-RUN npm install --production
+COPY --chown=pptruser --from=build /app/dist/package.json ./package.json
+COPY --chown=pptruser --from=build /app/dist/pnpm-lock.yaml ./pnpm-lock.yaml
 
-COPY --chown=chrome --from=build /app/dist ./
+RUN pnpm install --production
 
-ENTRYPOINT ["tini", "--"]
+COPY --chown=pptruser --from=build /app/dist .
 
 EXPOSE 8080
+
 CMD ["npm", "run", "start:docker"]

@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 export enum ERROR_MAP {
   OperationalError = 'OperationalError',
   SpawnError = 'spawn error',
@@ -21,7 +20,11 @@ export class OperationalError extends Error {
 
   private code: keyof typeof ERROR_MAP;
 
-  constructor(extra?: object, message?: string, code: keyof typeof ERROR_MAP = 'OperationalError') {
+  constructor(
+    extra?: object,
+    message?: string,
+    code: keyof typeof ERROR_MAP = 'OperationalError',
+  ) {
     super();
 
     this.code = code;
@@ -46,7 +49,9 @@ ${this.stack || ''}`;
   }
 }
 
-export type ERRORS = { [name in keyof typeof ERROR_MAP]: typeof OperationalError };
+export type ERRORS = {
+  [name in keyof typeof ERROR_MAP]: typeof OperationalError;
+};
 
 function buildErrors(): ERRORS {
   const keys = Object.keys(ERROR_MAP) as [keyof typeof ERROR_MAP];
@@ -59,7 +64,6 @@ function buildErrors(): ERRORS {
       }
     }
 
-    // eslint-disable-next-line no-param-reassign
     result[code] = ChildError;
     return result;
   }, {} as any);

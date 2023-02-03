@@ -8,8 +8,6 @@ async function hideHeadlessAttr(browser: Browser, page: Page) {
   await page.setUserAgent(userAgent.replace(/(?<=\s)Headless(?=Chrome)/i, ''));
 
   await page.evaluateOnNewDocument(() => {
-    /* eslint-disable @typescript-eslint/ban-ts-ignore */
-
     // overwrite the `languages` property to use a custom getter
     if (!navigator.languages || navigator.languages.length === 0) {
       Object.defineProperty(navigator, 'languages', {
@@ -118,7 +116,7 @@ function getMockBrowser(browser: Browser, afterPageCreate: Function) {
   const openedPages: Page[] = [];
 
   return new Proxy(browser, {
-    get(target, name) {
+    get(target, name, receiver) {
       if (name === 'newPage') {
         return async () => {
           const page = await Reflect.apply(target[name], target, []);
@@ -138,7 +136,6 @@ function getMockBrowser(browser: Browser, afterPageCreate: Function) {
           while (openedPages.length > 0) {
             const page = openedPages.shift();
             try {
-              // eslint-disable-next-line no-await-in-loop
               await page?.close();
             } catch (e) {
               // do nothing
@@ -147,7 +144,11 @@ function getMockBrowser(browser: Browser, afterPageCreate: Function) {
         };
       }
 
-      return Reflect.get(target, name);
+      if (name === 'pages') {
+        return browser.pages.bind(browser);
+      }
+
+      return Reflect.get(target, name, receiver);
     },
   });
 }
