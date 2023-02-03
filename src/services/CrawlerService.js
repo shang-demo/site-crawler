@@ -14,7 +14,7 @@ const svc = {
       const code = `
 const browser = await puppeteer.connect();
 const page = await browser.newPage();
-await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2'});
+await page.goto('${requestOptions.url}', {waitUntil: 'networkidle2', timeout: 60000});
 if (${requestOptions.device ? 'true' : 'false'}) {
   await page.emulate(DeviceDescriptors['${requestOptions.device}'])
 }
