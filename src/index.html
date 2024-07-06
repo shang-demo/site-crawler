@@ -69,7 +69,7 @@
     function init() {
       let code = `const browser = await puppeteer.connect(); // optional
 const page = await browser.newPage();
-await page.goto('http://headless.xinshangshangxin.com/headless-test', {waitUntil: 'networkidle2'});
+await page.goto('http://headless.fancytp.com/headless-test', {waitUntil: 'networkidle2'});
 const result = await page.content();
 await browser.close(); // optional
 return result;`;
